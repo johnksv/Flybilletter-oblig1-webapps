@@ -99,6 +99,8 @@
     </Compile>
     <Compile Include="Models\Flyplass.cs" />
     <Compile Include="Models\Rute.cs" />
+    <Compile Include="Models\Fly.cs" />
+    <Compile Include="Models\Kunde.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
