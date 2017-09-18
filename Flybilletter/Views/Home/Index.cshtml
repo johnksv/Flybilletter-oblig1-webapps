@@ -3,5 +3,12 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Flybiletter - Forside</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    // TODO lag form
+}
 
