@@ -9,16 +9,23 @@ namespace Flybilletter.Models
 {
     public class DB : DbContext
     {
+
         public DB() : base("name=Flybilletter")
         {
             Database.CreateIfNotExists();
+            Database.SetInitializer(new DBInit());
         }
-        
-        //TODO create DBSet
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
+
+        public virtual DbSet<Tur> Turer { get; set; }
+        public virtual DbSet<Fly> Fly { get; set; }
+        public virtual DbSet<Flyplass> Flyplasser { get; set; }
+        public virtual DbSet<Kunde> Kunder { get; set; }
+        public virtual DbSet<Reise> Reiser { get; set; }
+        public virtual DbSet<Rute> Ruter { get; set; }
     }
 }
