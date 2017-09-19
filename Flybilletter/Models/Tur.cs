@@ -7,6 +7,7 @@ namespace Flybilletter.Models
 {
     public class Tur
     {
+        public int ID { get; set; }
         public List<Reise> Reiser { get; set; }
         public Rute Rute { get; set; }
         public Fly Fly { get; set; }
