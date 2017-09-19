@@ -8,7 +8,7 @@ namespace Flybilletter.Models
     public class Fly
     {
         public int ID { get; set; }
-        public string Modell { get; set; }
+        public string Modell { get; set; } //Modell-navn til flyet
         public bool[][] Sete { get; set; } // true er ledig, false er ikke ledig
     }
 }

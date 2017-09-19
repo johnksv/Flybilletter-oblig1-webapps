@@ -10,8 +10,7 @@ namespace Flybilletter.Models
         public int ID { get; set; }
         public Flyplass Fra { get; set; }
         public Flyplass Til { get; set; }
-        public DateTime AvgangsTid { get; set; }
-        public DateTime AnkomstTid { get; set; }
+        public double BasePris { get; set; } //faktor for å regne ut total pris for turen
        
 
 

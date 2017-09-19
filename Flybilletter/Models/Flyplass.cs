@@ -9,7 +9,8 @@ namespace Flybilletter.Models
     {
         public string ID { get; set; }
         public string Navn { get; set; }
-        public By By { get; set; }
+        public string By { get; set; }
+        public string Land { get; set; }
         
 
     }

@@ -116,9 +116,11 @@
     </Compile>
     <Compile Include="Models\DB.cs" />
     <Compile Include="Models\Flyplass.cs" />
+    <Compile Include="Models\Reise.cs" />
     <Compile Include="Models\Rute.cs" />
     <Compile Include="Models\Fly.cs" />
     <Compile Include="Models\Kunde.cs" />
+    <Compile Include="Models\Tur.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
