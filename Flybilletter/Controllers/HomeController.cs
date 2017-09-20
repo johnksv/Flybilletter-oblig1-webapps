@@ -14,9 +14,19 @@ namespace Flybilletter.Controllers
 
         public ActionResult Index()
         {
-            
+                        
             return View();
         }
+
+        public ActionResult Sok()
+        {
+            List<Flyplass> plasser = db.Flyplasser.ToList();
+            var model = new SokViewModel();
+            model.Flyplasser = plasser;
+            return View(model);
+        }
+
+        
 
         protected override void Dispose(bool disposing)
         {
