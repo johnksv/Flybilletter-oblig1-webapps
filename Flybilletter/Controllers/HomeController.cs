@@ -14,7 +14,7 @@ namespace Flybilletter.Controllers
 
         public ActionResult Index()
         {
-                        
+            
             return View();
         }
 
