@@ -23,7 +23,10 @@ namespace Flybilletter.Controllers
             List<Flyplass> plasser = db.Flyplasser.ToList();
             var model = new SokViewModel()
             {
-                Flyplasser = plasser
+                Flyplasser = plasser,
+                Avreise = DateTime.Now.Date,
+                Retur = DateTime.Now.Date.AddDays(1)
+                
             };
 
             return View(model);

@@ -12,7 +12,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>SokViewModel</h4>
+        <h4>Søk etter flyreiser</h4>
         <hr />
 
         <div class="form-group">
@@ -28,7 +28,7 @@
         </div>
 
         <div class="form-group">
-             <label class="control-label col-md-2" for="Fra">Fra</label>
+            <label class="control-label col-md-2" for="Fra">Fra</label>
             <div class="col-md-10">
                 <select class="form-control">
                     @foreach (var item in Model.Flyplasser)
@@ -43,7 +43,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Avreise, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Avreise, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Avreise, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                 @Html.ValidationMessageFor(model => model.Avreise, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -51,15 +51,15 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Retur, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Retur, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Retur, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                 @Html.ValidationMessageFor(model => model.Retur, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.AntallBilletter, htmlAttributes: new { @class = "control-label col-md-2"})
+            @Html.LabelFor(model => model.AntallBilletter, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AntallBilletter, new { htmlAttributes = new { @class = "form-control", @min = "1" } })
+                @Html.EditorFor(model => model.AntallBilletter, new { htmlAttributes = new { @class = "form-control", @min = "1", @max = "100", @Value = "1" } })
                 @Html.ValidationMessageFor(model => model.AntallBilletter, "", new { @class = "text-danger" })
             </div>
         </div>

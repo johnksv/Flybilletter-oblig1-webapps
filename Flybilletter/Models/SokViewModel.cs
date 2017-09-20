@@ -10,9 +10,20 @@ namespace Flybilletter.Models
     {
         //TODO: Legge til barnebilletter
         public List<Flyplass> Flyplasser { get; set; }
+
+        [Required]
         public Flyplass Fra { get; set; }
+
+        [Required]
         public Flyplass Til { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Avreise { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Retur { get; set; }
         [Range (1, 100)]
         [Display(Name = "Antall Billetter")]
