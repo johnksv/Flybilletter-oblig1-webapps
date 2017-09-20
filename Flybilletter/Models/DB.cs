@@ -21,7 +21,7 @@ namespace Flybilletter.Models
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
-        public virtual DbSet<Tur> Turer { get; set; }
+        public virtual DbSet<Flygning> Flygninger { get; set; }
         public virtual DbSet<Fly> Fly { get; set; }
         public virtual DbSet<Flyplass> Flyplasser { get; set; }
         public virtual DbSet<Kunde> Kunder { get; set; }

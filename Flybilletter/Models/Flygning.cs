@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Flybilletter.Models
 {
-    public class Tur
+    public class Flygning
     {
         public int ID { get; set; }
         public List<Reise> Reiser { get; set; }

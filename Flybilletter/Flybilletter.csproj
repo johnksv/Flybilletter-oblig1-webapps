@@ -124,7 +124,7 @@
     <Compile Include="Models\Rute.cs" />
     <Compile Include="Models\Fly.cs" />
     <Compile Include="Models\Kunde.cs" />
-    <Compile Include="Models\Tur.cs" />
+    <Compile Include="Models\Flygning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
