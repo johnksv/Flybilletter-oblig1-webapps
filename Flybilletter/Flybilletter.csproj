@@ -120,7 +120,7 @@
     <Compile Include="Models\DB.cs" />
     <Compile Include="Models\DBInit.cs" />
     <Compile Include="Models\Flyplass.cs" />
-    <Compile Include="Models\Reise.cs" />
+    <Compile Include="Models\Bestilling.cs" />
     <Compile Include="Models\Rute.cs" />
     <Compile Include="Models\Fly.cs" />
     <Compile Include="Models\Kunde.cs" />

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Flybilletter.Models
 {
-    public class Reise
+    public class Bestilling
     { 
         public int ID { get; set; }
         public string Referanse { get; set; } //ID til Reisen
