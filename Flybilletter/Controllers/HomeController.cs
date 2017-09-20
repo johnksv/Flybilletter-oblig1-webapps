@@ -29,6 +29,22 @@ namespace Flybilletter.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult Sok(Flybilletter.Models.SokViewModel innSok)
+        {
+            if (ModelState.IsValid)
+            {
+
+                Response.Write("SØK ER OK");
+
+                return RedirectToAction("Index");
+
+            }
+
+
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

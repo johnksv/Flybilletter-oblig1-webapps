@@ -12,7 +12,7 @@ namespace Flybilletter.Models
         public Flyplass Fra { get; set; }
         public Flyplass Til { get; set; }
         public DateTime Avreise { get; set; }
-        public DateTime Ankomst { get; set; }
+        public DateTime Retur { get; set; }
         public int AntallBilletter { get; set; }
 
 
