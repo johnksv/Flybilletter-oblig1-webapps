@@ -11,6 +11,7 @@ namespace Flybilletter.Models
         public string Referanse { get; set; } //ID til Reisen
         public List<Kunde> Passasjerer { get; set; } //Passasjerer knyttet til en bestilling
         public List<Flygning> Flygninger { get; set; } 
+        public DateTime BestillingsTidspunkt { get; set; }
 
     }
 }
