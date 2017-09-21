@@ -12,10 +12,12 @@ namespace Flybilletter.Models
         public List<Flyplass> Flyplasser { get; set; }
 
         [Required]
-        public Flyplass Fra { get; set; }
+        [RegularExpression("^[A-Z]{3}$", ErrorMessage ="Ugyldig flyplass-ID")]
+        public String Fra { get; set; }
 
         [Required]
-        public Flyplass Til { get; set; }
+        [RegularExpression("^[A-Z]{3}$", ErrorMessage = "Ugyldig flyplass-ID")]
+        public String Til { get; set; }
 
         [Required]
         [DataType(DataType.Date)]

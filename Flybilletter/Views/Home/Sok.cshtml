@@ -16,9 +16,9 @@
         <hr />
 
         <div class="form-group">
-            <label class="control-label col-md-2" for="Avreise">Til</label>
+            <label class="control-label col-md-2" for="Fra">Fra</label>
             <div class="col-md-10">
-                <select class="form-control">
+                <select class="form-control" name="Fra" id="Fra">
                     @foreach (var item in Model.Flyplasser)
                     {
                         <option value="@item.ID">@item.Navn (@item.ID - @item.Land)</option>
@@ -28,9 +28,9 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2" for="Fra">Fra</label>
+            <label class="control-label col-md-2" for="Til">Til</label>
             <div class="col-md-10">
-                <select class="form-control">
+                <select class="form-control" name="Til" id="Til">
                     @foreach (var item in Model.Flyplasser)
                     {
                         <option value="@item.ID">@item.Navn (@item.ID - @item.Land)</option>
