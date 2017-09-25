@@ -51,28 +51,44 @@ namespace Flybilletter.Controllers
 
         public ActionResult Bestille()
         {
+
             var fly = db.Flygninger.Where(f => f.AvgangsTid > DateTime.Now).First();
+            var kunder = new List<Kunde>() { new Kunde() };
 
             var model = new BestillingViewModel()
             {
-                AntallBilletter = 1,
                 Flygninger = new List<Flygning>() { fly },
                 Fra = fly.Rute.Fra.By,
                 Til = fly.Rute.Til.By,
-                Kunder = new List<Kunde>()
-                
-        };
+                Kunder = kunder
+
+            };
+            //Lagrer gjeldende bestilling i session slik at vi har denne tilgjengelig vet eventuelle feilmeldinger og endringer.
+            Session["GjeldendeBestilling"] = model;
 
             return View(model);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            db.Dispose();
         }
-        base.Dispose(disposing);
+
+
+        [HttpPost]
+        public ActionResult Bestille(BestillingViewModel bestillingViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = (BestillingViewModel)Session["GjeldendeBestilling"];
+            return View(model);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
-}
 }

@@ -15,24 +15,34 @@
     <p>@item.AnkomstTid.ToShortDateString() - @item.AvgangsTid.ToShortDateString()</p>
 }
 
-@for(var i = 0; i < Model.AntallBilletter; i++)
-{
-    using (Html.BeginForm())
+<hr />
+<h3>Reisende</h3>
+
+    <h4>Passasjer </h4>
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+
+        for (int i = 0; i < Model.Kunder.Count; i++)
+        {
+            @Html.EditorFor(model => model.Kunder[i], new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Kunder, "", new { @class = "text-danger" })
+        }
+
+        <!------------------------------------------
+            Kan også løses på denne måten, da slipper vi unna for-løkken, men får ikke indeksen til hvilken passasjer det er.
+            @Html.EditorFor(model => model.Kunder, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Kunder, "", new { @class = "text-danger" })
+        
+        ---------------------------------------------->
         <div class="form-group">
-            @Html.LabelFor(model => model.Kunder, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Kunder, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Kunder, "", new { @class = "text-danger" })
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Lagre" class="btn btn-default" />
             </div>
         </div>
 
     }
-
-}
-
-
+   
 <div>
     @Html.ActionLink("Tilbake til søk", "Index")
 </div>
