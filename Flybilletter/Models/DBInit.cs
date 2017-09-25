@@ -111,6 +111,47 @@ namespace Flybilletter.Models
                 Sete = new bool[50, 9] //50 rader, 9 seter hver rad
             };
 
+
+            for (int i = 0; i < 336; i += 4) // 336 timer = 2 uker
+            {
+                var flygningBOOOSL = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i),
+                    AnkomstTid = DateTime.Today.AddHours(i + 1),
+                    Fly = Boeing737_1,
+                    Rute = BOOOSL
+                };
+
+                var flygningOSLBOO = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i + 2),
+                    AnkomstTid = DateTime.Today.AddHours(i + 3),
+                    Fly = flygningBOOOSL.Fly,
+                    Rute = OSLBOO
+                };
+
+                var flygningMXPOSL = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i + 0.5),
+                    AnkomstTid = DateTime.Today.AddHours(i + 2.5),
+                    Fly = AirbusA380_1,
+                    Rute = MXPOSL
+                };
+
+                var flygningOSLMXP = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i + 4),
+                    AnkomstTid = DateTime.Today.AddHours(i + 6),
+                    Fly = flygningMXPOSL.Fly,
+                    Rute = OSLMXP
+                };
+
+                context.Flygninger.Add(flygningBOOOSL);
+                context.Flygninger.Add(flygningOSLBOO);
+                context.Flygninger.Add(flygningMXPOSL);
+                context.Flygninger.Add(flygningOSLMXP);
+            }
+
             context.Flyplasser.Add(OSL);
             context.Flyplasser.Add(BOO);
             context.Flyplasser.Add(MXP);
