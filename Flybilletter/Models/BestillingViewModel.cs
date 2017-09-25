@@ -22,6 +22,14 @@ namespace Flybilletter.Models
         [Required]
         public List<Kunde> Kunder { get; set; }
 
-        public int AntallBilletter { get; set; }
+        public int AntallBilletter
+        {
+            get
+            {
+                return Kunder.Count();
+            }
+
+            private set { }
+        }
     }
 }
