@@ -26,7 +26,7 @@ namespace Flybilletter.Controllers
                 Flyplasser = plasser,
                 Avreise = DateTime.Now.Date,
                 Retur = DateTime.Now.Date.AddDays(1)
-                
+
             };
 
             return View(model);
@@ -48,13 +48,31 @@ namespace Flybilletter.Controllers
             return View();
         }
 
-        protected override void Dispose(bool disposing)
+
+        public ActionResult Bestille()
         {
-            if (disposing)
+            var fly = db.Flygninger.Where(f => f.AvgangsTid > DateTime.Now).First();
+
+            var model = new BestillingViewModel()
             {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+                AntallBilletter = 1,
+                Flygninger = new List<Flygning>() { fly },
+                Fra = fly.Rute.Fra.By,
+                Til = fly.Rute.Til.By,
+                Kunder = new List<Kunde>()
+                
+        };
+
+            return View(model);
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            db.Dispose();
+        }
+        base.Dispose(disposing);
+    }
+}
 }
