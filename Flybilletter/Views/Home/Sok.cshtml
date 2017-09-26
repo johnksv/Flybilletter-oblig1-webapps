@@ -8,6 +8,34 @@
 <script type="text/javascript">
     var flyplasser = JSON.parse('@Html.Raw(jsonFlyplasser)');
     console.log(flyplasser);
+
+    function fraFlyplasser()
+    {
+        var utStreng = "";
+        for (var i in flyplasser) {
+            utStreng += "<option value='" + flyplasser[i].ID + "'>" + flyplasser[i].Navn + " - " + flyplasser[i].ID + "</option>";
+        }
+        $("#fraFlyplass").empty().append(utStreng);
+        console.log(utStreng);
+    }
+
+    function tilFlyplass(fraFlyplassID)
+    {
+        var utStreng = "";
+        for (var i in flyplasser) {
+            if (flyplasser[i].ID != fraFlyplassID)
+            {
+                utStreng += "<option value='" + flyplasser[i].ID + "'>" + flyplasser[i].Navn + " - " + flyplasser[i].ID + "</option>";
+            }
+        }
+        $("#tilFlyplass").empty().append(utStreng);
+        console.log(utStreng);
+    }
+
+    $(document).ready(function ()
+    {
+        $("#fraFlyplass").click(fraFlyplasser);
+    });
 </script>
 <h2>Sok</h2>
 
@@ -23,24 +51,14 @@
         <div class="form-group">
             <label class="control-label col-md-2" for="Fra">Fra</label>
             <div class="col-md-10">
-                <select class="form-control" name="Fra" id="Fra">
-                    @foreach (var item in Model.Flyplasser)
-                    {
-                        <option value="@item.ID">@item.Navn (@item.ID - @item.Land)</option>
-                    }
-                </select>
+                <select id="fraFlyplass" class="form-control" name="Fra"></select>
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-md-2" for="Til">Til</label>
             <div class="col-md-10">
-                <select class="form-control" name="Til" id="Til">
-                    @foreach (var item in Model.Flyplasser)
-                    {
-                        <option value="@item.ID">@item.Navn (@item.ID - @item.Land)</option>
-                    }
-                </select>
+                <select id="tilFlyplass" class="form-control" name="Til"></select>
             </div>
         </div>
 
