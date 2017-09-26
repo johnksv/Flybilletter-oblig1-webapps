@@ -26,7 +26,7 @@ namespace Flybilletter.Controllers
                 Flyplasser = plasser,
                 Avreise = DateTime.Now.Date,
                 Retur = DateTime.Now.Date.AddDays(1)
-                
+
             };
 
             return View(model);
@@ -46,6 +46,40 @@ namespace Flybilletter.Controllers
 
 
             return View();
+        }
+
+
+        public ActionResult Bestille()
+        {
+
+            var fly = db.Flygninger.Where(f => f.AvgangsTid > DateTime.Now).First();
+            var kunder = new List<Kunde>() { new Kunde() };
+
+            var model = new BestillingViewModel()
+            {
+                Flygninger = new List<Flygning>() { fly },
+                Fra = fly.Rute.Fra.By,
+                Til = fly.Rute.Til.By,
+                Kunder = kunder
+
+            };
+            //Lagrer gjeldende bestilling i session slik at vi har denne tilgjengelig vet eventuelle feilmeldinger og endringer.
+            Session["GjeldendeBestilling"] = model;
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public ActionResult Bestille(BestillingViewModel bestillingViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = (BestillingViewModel)Session["GjeldendeBestilling"];
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)
