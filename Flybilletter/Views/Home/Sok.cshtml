@@ -2,8 +2,13 @@
 
 @{
     ViewBag.Title = "Sok";
+    var jsSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    string jsonFlyplasser = jsSerializer.Serialize(Model.Flyplasser);
 }
-
+<script type="text/javascript">
+    var flyplasser = JSON.parse('@Html.Raw(jsonFlyplasser)');
+    console.log(flyplasser);
+</script>
 <h2>Sok</h2>
 
 
