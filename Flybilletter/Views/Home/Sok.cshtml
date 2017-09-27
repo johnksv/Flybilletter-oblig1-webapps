@@ -9,32 +9,34 @@
     var flyplasser = JSON.parse('@Html.Raw(jsonFlyplasser)');
     console.log(flyplasser);
 
-    function fraFlyplasser()
+    function populerFlyplassSelectMedOptions(htmlElementID, ekskluderFlyplassID)
     {
         var utStreng = "";
         for (var i in flyplasser) {
-            utStreng += "<option value='" + flyplasser[i].ID + "'>" + flyplasser[i].Navn + " - " + flyplasser[i].ID + "</option>";
-        }
-        $("#fraFlyplass").empty().append(utStreng);
-        console.log(utStreng);
-    }
-
-    function tilFlyplass(fraFlyplassID)
-    {
-        var utStreng = "";
-        for (var i in flyplasser) {
-            if (flyplasser[i].ID != fraFlyplassID)
+            var flyplass = flyplasser[i];
+            if (flyplass.ID !== ekskluderFlyplassID)
             {
-                utStreng += "<option value='" + flyplasser[i].ID + "'>" + flyplasser[i].Navn + " - " + flyplasser[i].ID + "</option>";
+                utStreng += "<option value='" + flyplass.ID + "'>" + flyplass.Navn + " - " + flyplass.ID + "</option>";
             }
         }
-        $("#tilFlyplass").empty().append(utStreng);
+        
+        $(htmlElementID).empty().append(utStreng);
         console.log(utStreng);
     }
 
     $(document).ready(function ()
     {
-        $("#fraFlyplass").click(fraFlyplasser);
+
+        populerFlyplassSelectMedOptions("#fraFlyplass", null)
+
+        //Funksjonen som Change tar som parameter blir kalt når select-boksen endrer verdi
+        $("#fraFlyplass").change(function () {
+            var fraFlyplassID = $("#fraFlyplass").val();
+            populerFlyplassSelectMedOptions("#tilFlyplass", fraFlyplassID)
+        });
+
+        //Kaller fraFlyplass sin change for første gang (slik at til-flyplasser fylles inn korrekt)
+        $("#fraFlyplass").change();
     });
 </script>
 <h2>Sok</h2>
