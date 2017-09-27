@@ -52,7 +52,7 @@ namespace Flybilletter.Controllers
         public ActionResult Bestille()
         {
 
-            var fly = db.Flygninger.Where(f => f.AvgangsTid > DateTime.Now).First();
+            var fly = db.Flygninger.Include("Fly").Where(f => f.AvgangsTid > DateTime.Now).First();
             var kunder = new List<Kunde>() { new Kunde() };
 
             var model = new BestillingViewModel()
@@ -73,13 +73,23 @@ namespace Flybilletter.Controllers
         [HttpPost]
         public ActionResult Bestille(BestillingViewModel bestillingViewModel)
         {
+            var gjeldende = (BestillingViewModel) Session["GjeldendeBestilling"];
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+
+                //Siden gjeldene referer til det samme som Session["GjeldendeBestilling"] slipper vi å gjøre noe mer
+                gjeldende.Kunder = bestillingViewModel.Kunder;
+                return RedirectToAction("BestillingBekreftelse");
             }
 
-            var model = (BestillingViewModel)Session["GjeldendeBestilling"];
-            return View(model);
+            return View(gjeldende);
+        }
+
+        public ActionResult BestillingBekreftelse()
+        {
+
+            var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
+            return View(gjeldende);
         }
 
         protected override void Dispose(bool disposing)

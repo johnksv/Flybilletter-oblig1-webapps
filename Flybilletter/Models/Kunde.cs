@@ -8,6 +8,11 @@ namespace Flybilletter.Models
 {
     public class Kunde
     {
+        public Kunde()
+        {
+            Fodselsdag = new DateTime(1970, 1, 1);
+        }
+
         public int ID { get; set; }
 
         [Required]
