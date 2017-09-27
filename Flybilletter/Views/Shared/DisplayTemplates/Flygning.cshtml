@@ -1,0 +1,29 @@
+﻿@model Flybilletter.Models.Flygning
+
+<div class="form-horizontal">
+    @{var ruteFra = Model.Rute.Fra; }
+    @{var ruteTil = Model.Rute.Til; }
+    <h4>Flygning fra @ruteFra.By (@ruteFra.ID)  til @ruteTil.By (@ruteTil.ID)</h4>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AvgangsTid, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10 form-control-static">
+            @Html.DisplayFor(model => model.AvgangsTid)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AnkomstTid, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10 form-control-static">
+            @Html.DisplayFor(model => model.AnkomstTid)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Fly, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10 form-control-static">
+            @Html.DisplayFor(model => model.Fly.Modell)
+        </div>
+    </div>
+
+</div>

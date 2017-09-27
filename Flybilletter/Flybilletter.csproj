@@ -151,6 +151,7 @@
     <Content Include="Views\Shared\EditorTemplates\Kunde.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Kunde.cshtml" />
     <Content Include="Views\Home\BestillingBekreftelse.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Flygning.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

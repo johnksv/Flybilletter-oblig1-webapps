@@ -52,7 +52,7 @@ namespace Flybilletter.Controllers
         public ActionResult Bestille()
         {
 
-            var fly = db.Flygninger.Where(f => f.AvgangsTid > DateTime.Now).First();
+            var fly = db.Flygninger.Include("Fly").Where(f => f.AvgangsTid > DateTime.Now).First();
             var kunder = new List<Kunde>() { new Kunde() };
 
             var model = new BestillingViewModel()
