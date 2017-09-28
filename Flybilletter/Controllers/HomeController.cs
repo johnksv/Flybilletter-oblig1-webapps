@@ -20,10 +20,10 @@ namespace Flybilletter.Controllers
 
         public ActionResult Sok()
         {
-            List<Flyplass> plasser = db.Flyplasser.ToList();
+            ViewBag.flyplasser = db.Flyplasser.ToList();
+
             var model = new SokViewModel()
             {
-                Flyplasser = plasser,
                 Avreise = DateTime.Now.Date,
                 Retur = DateTime.Now.Date.AddDays(1)
 
@@ -35,21 +35,24 @@ namespace Flybilletter.Controllers
         [HttpPost]
         public ActionResult Sok(Flybilletter.Models.SokViewModel innSok)
         {
-            if (ModelState.IsValid)
+            //TODO: Mulig vi må gjøre om på denne; Er dette når man har valgt flygning og trykker "Neste"?
+
+            bool sammeTilOgFra = innSok.Til.Equals(innSok.Fra);
+            bool fra = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Fra).Any(); //Hvis du tweaket i HTML-koden fortjener du ikke feilmelding
+            bool til = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Til).Any();
+
+
+            if (ModelState.IsValid && !sammeTilOgFra && fra && til)
             {
-
-                Response.Write("SØK ER OK");
-
                 return RedirectToAction("Index");
-
             }
 
-
-            return View();
+            ViewBag.flyplasser = db.Flyplasser.ToList();
+            return View(innSok);
         }
 
 
-        public ActionResult Bestille()
+        public ActionResult BestillingDetaljer()
         {
 
             var fly = db.Flygninger.Include("Fly").Where(f => f.AvgangsTid > DateTime.Now).First();
@@ -71,25 +74,37 @@ namespace Flybilletter.Controllers
 
 
         [HttpPost]
-        public ActionResult Bestille(BestillingViewModel bestillingViewModel)
+        public ActionResult BestillingDetaljer(BestillingViewModel bestillingViewModel)
         {
-            var gjeldende = (BestillingViewModel) Session["GjeldendeBestilling"];
+            var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
             if (ModelState.IsValid)
             {
 
                 //Siden gjeldene referer til det samme som Session["GjeldendeBestilling"] slipper vi å gjøre noe mer
                 gjeldende.Kunder = bestillingViewModel.Kunder;
-                return RedirectToAction("BestillingBekreftelse");
+                return RedirectToAction("BestillingOppsummering");
             }
 
             return View(gjeldende);
         }
 
-        public ActionResult BestillingBekreftelse()
+        public ActionResult BestillingOppsummering()
         {
-
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
             return View(gjeldende);
+        }
+
+        [HttpPost]
+        public ActionResult BestillingOppsummering(BestillingViewModel innModel)
+        {
+            //TODO: Generer referanse, lagre i database
+            return RedirectToAction("Kvittering");
+        }
+
+        public ActionResult Kvittering()
+        {
+            //TODO: Send inn bestillingen som har blitt generert
+            return View();
         }
 
         protected override void Dispose(bool disposing)

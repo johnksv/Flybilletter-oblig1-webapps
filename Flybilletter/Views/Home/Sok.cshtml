@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Sok";
     var jsSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-    string jsonFlyplasser = jsSerializer.Serialize(Model.Flyplasser);
+    string jsonFlyplasser = jsSerializer.Serialize(ViewBag.Flyplasser);
 }
 <script type="text/javascript">
     var flyplasser = JSON.parse('@Html.Raw(jsonFlyplasser)');
@@ -72,6 +72,7 @@
             <label class="control-label col-md-2" for="Fra">Fra</label>
             <div class="col-md-10">
                 <select id="fraFlyplass" class="form-control" name="Fra"></select>
+                @Html.ValidationMessageFor(model => model.Fra, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -79,6 +80,7 @@
             <label class="control-label col-md-2" for="Til">Til</label>
             <div class="col-md-10">
                 <select id="tilFlyplass" class="form-control" name="Til"></select>
+                @Html.ValidationMessageFor(model => model.Til, "", new { @class = "text-danger" })
             </div>
         </div>
 
