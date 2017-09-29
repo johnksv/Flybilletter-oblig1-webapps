@@ -137,6 +137,15 @@ namespace Flybilletter.Controllers
             return View(bestilling);
         }
 
+        public ActionResult ReferanseSammendrag(string referanse)
+        {
+            var bestilling = db.Bestillinger.First(best=> best.Referanse.Equals(referanse));
+
+            //TODO: Hvis bestilling er null, altså at referansen ikke finnes i databasen.
+
+            return View(bestilling);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
