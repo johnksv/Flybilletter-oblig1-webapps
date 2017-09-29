@@ -94,17 +94,47 @@ namespace Flybilletter.Controllers
             return View(gjeldende);
         }
 
-        [HttpPost]
-        public ActionResult BestillingOppsummering(BestillingViewModel innModel)
+        
+        public ActionResult GenererReferanse()
         {
             //TODO: Generer referanse, lagre i database
+            var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
+
+            var list = new List<Flygning>();
+
+
+            var bestilling = new Bestilling()
+            {
+                BestillingsTidspunkt = DateTime.Now,
+                Flygninger = new List<Flygning>(),
+                Passasjerer = gjeldende.Kunder,
+                Referanse = Guid.NewGuid().ToString().ToUpper().Substring(0,6)
+            };
+
+
+            //Vi må finne de orginale flygningene i databasen for å unngå exception om "Violation of PRIMARY KEY constraint"
+            foreach (var flygning in gjeldende.Flygninger)
+            {
+                var dbFlygning = db.Flygninger.Find(flygning.ID);
+                if (dbFlygning == null) return View(); //Det skjedde en feil
+
+                bestilling.Flygninger.Add(dbFlygning);
+            }
+
+            db.Bestillinger.Add(bestilling);
+
+            db.SaveChanges();
+
+
+            TempData["bestilling"] = bestilling;
+
             return RedirectToAction("Kvittering");
         }
 
         public ActionResult Kvittering()
         {
-            //TODO: Send inn bestillingen som har blitt generert
-            return View();
+            var bestilling = (Bestilling) TempData["bestilling"];
+            return View(bestilling);
         }
 
         protected override void Dispose(bool disposing)
