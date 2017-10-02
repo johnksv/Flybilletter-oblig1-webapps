@@ -125,7 +125,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -153,12 +155,13 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.2.1.min.map" />
-    <Content Include="Views\Home\Bestille.cshtml" />
+    <Content Include="Views\Home\BestillingDetaljer.cshtml" />
     <Content Include="Views\Home\Sok.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Kunde.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Kunde.cshtml" />
-    <Content Include="Views\Home\BestillingBekreftelse.cshtml" />
+    <Content Include="Views\Home\BestillingOppsummering.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Flygning.cshtml" />
+    <Content Include="Views\Home\Kvittering.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

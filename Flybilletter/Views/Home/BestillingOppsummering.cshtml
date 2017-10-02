@@ -33,5 +33,9 @@ else
         <hr />
     }
 
-    <a href="/Home/Bekreftelse" class="btn btn-primary">Bekreft og kjøp</a>
+    using (Html.BeginForm("GenererReferanse", "Home"))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit">Bekreft og kjøp</button>
+    }
 }

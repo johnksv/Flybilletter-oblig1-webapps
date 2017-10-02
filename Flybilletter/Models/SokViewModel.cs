@@ -8,8 +8,6 @@ namespace Flybilletter.Models
 {
     public class SokViewModel
     {
-        //TODO: Legge til barnebilletter
-        public List<Flyplass> Flyplasser { get; set; }
 
         [Required]
         [RegularExpression("^[A-Z]{3}$", ErrorMessage ="Ugyldig flyplass-ID")]
