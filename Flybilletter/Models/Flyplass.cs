@@ -11,7 +11,7 @@ namespace Flybilletter.Models
         public string Navn { get; set; }
         public string By { get; set; }
         public string Land { get; set; }
-        
+        public virtual List<Rute> Ruter { get; set; }
 
     }
 }
