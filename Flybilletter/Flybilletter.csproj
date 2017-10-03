@@ -162,6 +162,7 @@
     <Content Include="Views\Home\BestillingOppsummering.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Flygning.cshtml" />
     <Content Include="Views\Home\Kvittering.cshtml" />
+    <Content Include="Views\Home\_Flygninger.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

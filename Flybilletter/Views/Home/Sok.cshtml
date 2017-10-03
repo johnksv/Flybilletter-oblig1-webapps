@@ -51,15 +51,33 @@
         $("#fraFlyplass").change();
 
         $("input[name='turretur']").change(function () { radioButtonChange() });
+
+
+        $("#sokForm").change(function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: "/Home/Sok",
+                method: "POST",
+                data: $("#sokForm").serialize(),
+
+            }).done(function (httpResponse) {
+                $("#flygnigner").html(httpResponse);
+
+
+            });
+        });
+
+        $("#sokForm").change();
+
+
     });
 </script>
 <h2>Bestill flybilletter</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null,null,FormMethod.Post, new { id="sokForm"}))
 {
-    @Html.AntiForgeryToken()
-
     <div class="form-horizontal">
         <h4>Søk etter flyreiser</h4>
         <hr />
@@ -116,14 +134,15 @@
                 @Html.ValidationMessageFor(model => model.AntallBilletter, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Søk" class="btn btn-default" />
-            </div>
-        </div>
     </div>
 }
+
+
+<div id="flygnigner">
+
+
+</div>
+
 
 <div>
     @Html.ActionLink("Back to List", "Index")

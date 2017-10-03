@@ -41,14 +41,15 @@ namespace Flybilletter.Controllers
             bool fra = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Fra).Any(); //Hvis du tweaket i HTML-koden fortjener du ikke feilmelding
             bool til = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Til).Any();
 
+            List<Flygning> flygninger = null;
 
             if (ModelState.IsValid && !sammeTilOgFra && fra && til)
             {
-                return RedirectToAction("Index");
+                flygninger = new List<Flygning>();
             }
 
             ViewBag.flyplasser = db.Flyplasser.ToList();
-            return View(innSok);
+            return PartialView("_Flygninger", flygninger);
         }
 
 
