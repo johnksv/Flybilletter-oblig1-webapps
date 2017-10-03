@@ -112,6 +112,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\FlybilletterWebApps - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -163,6 +164,8 @@
     <Content Include="Views\Shared\DisplayTemplates\Flygning.cshtml" />
     <Content Include="Views\Home\Kvittering.cshtml" />
     <Content Include="Views\Home\_Flygninger.cshtml" />
+    <Content Include="Views\Home\_ReferanseSok.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Bestilling.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
