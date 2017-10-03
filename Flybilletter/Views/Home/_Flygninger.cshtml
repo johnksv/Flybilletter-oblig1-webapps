@@ -8,4 +8,10 @@ else
 {
 
     <h3>Flygninger:</h3>
+    <ul>
+        @foreach(var flygning in Model)
+        {
+            <li>@flygning.Rute.Fra.Navn - @flygning.Rute.Til.Navn - @flygning.AvgangsTid</li>
+        }
+    </ul>
 }
