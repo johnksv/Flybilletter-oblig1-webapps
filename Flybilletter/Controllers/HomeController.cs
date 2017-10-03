@@ -38,14 +38,40 @@ namespace Flybilletter.Controllers
             //TODO: Mulig vi må gjøre om på denne; Er dette når man har valgt flygning og trykker "Neste"?
 
             bool sammeTilOgFra = innSok.Til.Equals(innSok.Fra);
-            bool fra = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Fra).Any(); //Hvis du tweaket i HTML-koden fortjener du ikke feilmelding
-            bool til = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Til).Any();
+            var fra = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Fra).First(); //Hvis du tweaket i HTML-koden fortjener du ikke feilmelding
+            var til = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Til).First();
 
             List<Flygning> flygninger = null;
 
-            if (ModelState.IsValid && !sammeTilOgFra && fra && til)
+            if (ModelState.IsValid && !sammeTilOgFra && fra != null && til != null)
             {
                 flygninger = new List<Flygning>();
+                List<Flygning> fraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(fra.ID)).ToList();
+                List<Flygning> tilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(til.ID)).ToList();
+
+                foreach (Flygning flygning in fraListe)
+                {
+                    if (flygning.Rute.Til == til && flygning.AvgangsTid.Date == innSok.Avreise.Date)
+                        flygninger.Add(flygning);
+                }
+
+
+                List<Flygning> returFraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(til.ID)).ToList();
+                List<Flygning> returTilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(fra.ID)).ToList();
+
+                foreach (Flygning flygning in returFraListe)
+                {
+                    if (flygning.Rute.Til == fra)
+                    {
+
+                        if (flygning.AvgangsTid.Date == innSok.Retur.Date)
+                            flygninger.Add(flygning);
+                    }
+                    else
+                    {
+                        // Hvis det går flere flygninger til flere enn en flyplass
+                    }
+                }
             }
 
             ViewBag.flyplasser = db.Flyplasser.ToList();
@@ -109,7 +135,7 @@ namespace Flybilletter.Controllers
                 BestillingsTidspunkt = DateTime.Now,
                 Flygninger = new List<Flygning>(),
                 Passasjerer = gjeldende.Kunder,
-                Referanse = Guid.NewGuid().ToString().ToUpper().Substring(0,6)
+                Referanse = Guid.NewGuid().ToString().ToUpper().Substring(0, 6)
             };
 
 
@@ -134,13 +160,13 @@ namespace Flybilletter.Controllers
 
         public ActionResult Kvittering()
         {
-            var bestilling = (Bestilling) TempData["bestilling"];
+            var bestilling = (Bestilling)TempData["bestilling"];
             return View(bestilling);
         }
 
         public ActionResult ReferanseSammendrag(string referanse)
         {
-            var bestilling = db.Bestillinger.First(best=> best.Referanse.Equals(referanse));
+            var bestilling = db.Bestillinger.First(best => best.Referanse.Equals(referanse));
 
             //TODO: Hvis bestilling er null, altså at referansen ikke finnes i databasen.
 
