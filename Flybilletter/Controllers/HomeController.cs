@@ -95,7 +95,7 @@ namespace Flybilletter.Controllers
             return View(gjeldende);
         }
 
-        
+        [ValidateAntiForgeryToken]
         public ActionResult GenererReferanse()
         {
             //TODO: Generer referanse, lagre i database
