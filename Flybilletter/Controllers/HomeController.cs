@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -14,6 +15,10 @@ namespace Flybilletter.Controllers
 
         public ActionResult Index()
         {
+            //FOR DEBUGGING. TODO: REMOVE
+            var referanser = db.Bestillinger.Select(best => best.Referanse).ToArray();
+            ViewBag.referanser = referanser;
+
 
             return View();
         }
@@ -102,15 +107,17 @@ namespace Flybilletter.Controllers
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
 
             var list = new List<Flygning>();
-
-
             var bestilling = new Bestilling()
             {
                 BestillingsTidspunkt = DateTime.Now,
                 Flygninger = new List<Flygning>(),
-                Passasjerer = gjeldende.Kunder,
-                Referanse = Guid.NewGuid().ToString().ToUpper().Substring(0,6)
+                Passasjerer = gjeldende.Kunder
             };
+
+            do
+            {
+                bestilling.Referanse = Guid.NewGuid().ToString().ToUpper().Substring(0, 6);
+            } while (db.Bestillinger.Where(best => best.Referanse == bestilling.Referanse).Any()); //Lag en unik UUID helt til det ikke finnes i databasen fra før.
 
 
             //Vi må finne de orginale flygningene i databasen for å unngå exception om "Violation of PRIMARY KEY constraint"
@@ -137,6 +144,25 @@ namespace Flybilletter.Controllers
             var bestilling = (Bestilling) TempData["bestilling"];
             return View(bestilling);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReferanseSok(string referanse)
+        {
+            Bestilling bestilling = null;
+
+            referanse = referanse.ToUpper();
+            var regex = new Regex("^[A-Z0-9]{6}$");
+            bool isMatch = regex.IsMatch(referanse);
+
+            if (isMatch)
+            {
+                bestilling = db.Bestillinger.Where(best => best.Referanse == referanse).First();
+            }
+            
+            return View("BestillingInformasjon", bestilling);
+        }
+
 
         public ActionResult ReferanseSammendrag(string referanse)
         {

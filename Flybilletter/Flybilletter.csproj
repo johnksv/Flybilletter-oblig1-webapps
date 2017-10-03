@@ -165,7 +165,7 @@
     <Content Include="Views\Home\Kvittering.cshtml" />
     <Content Include="Views\Home\_Flygninger.cshtml" />
     <Content Include="Views\Home\_ReferanseSok.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\Bestilling.cshtml" />
+    <Content Include="Views\Home\BestillingInformasjon.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

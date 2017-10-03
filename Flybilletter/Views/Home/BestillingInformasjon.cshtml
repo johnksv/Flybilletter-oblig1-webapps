@@ -1,0 +1,36 @@
+﻿@model Flybilletter.Models.Bestilling
+
+@{
+    var fraFlyplass = Model.Flygninger.First().Rute.Fra;
+    var tilFlyplass = @Model.Flygninger.Last().Rute.Til;
+}
+
+<div>
+    <h3>Referanse: @Html.DisplayFor(model => model.Referanse)</h3>
+    <h4>Din reise fra @fraFlyplass.By (@fraFlyplass.ID) til @tilFlyplass.By (@tilFlyplass.ID)</h4>
+    <div>
+        <label>Tidspunkt for bestilling: </label>
+        @Html.DisplayFor(model => model.BestillingsTidspunkt)
+    </div>
+    <hr />
+
+    <h4>Flygninger</h4>
+    @for (int i = 0; i < Model.Flygninger.Count; i++)
+    {
+        @Html.DisplayFor(model => model.Flygninger[i], new { htmlAttributes = new { @class = "form-control" } })
+    }
+
+
+    <h4>Passasjerer</h4>
+    @for (int i = 0, antall = 1; i < Model.Passasjerer.Count; i++, antall++)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Passasjer @antall</h3>
+            </div>
+            <div class="panel-body">
+                @Html.DisplayFor(model => model.Passasjerer[i], new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    }
+</div>

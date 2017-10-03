@@ -5,10 +5,11 @@
 
 <h2>Flybiletter - Forside</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@Html.Partial("_ReferanseSok")
 
-    
+<h4>Referanser (FOR DEBUGGING ONLY)</h4>
+@foreach(string referanse in ViewBag.Referanser)
+{
+    @referanse
 }
 

@@ -1,40 +1,41 @@
 ﻿@model Flybilletter.Models.Kunde
 
-<div class="form-horizontal">
-    <div class="form-group">
-        @Html.LabelFor(model => model.Etternavn, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10 form-control-static">
-            @Html.DisplayFor(model => model.Etternavn)
-        </div>
-    </div>
+<dl class="dl-horizontal">
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Fornavn, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10 form-control-static">
-            @Html.DisplayFor(model => model.Fornavn)
-            
-        </div>
-    </div>
+    <dt>
+        Etternavn
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Etternavn)
+    </dd>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Fodselsdag, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10 form-control-static">
-            @Html.DisplayFor(model => model.Fodselsdag)
-            
-        </div>
-    </div>
+    <dt>
+        Fornavn
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Fornavn)
+    </dd>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Adresse, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10 form-control-static">
-            @Html.DisplayFor(model => model.Adresse)
-        </div>
-    </div>
+    <dt>
+        Fødselsdag
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Fodselsdag)
+    </dd>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Tlf, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10 form-control-static">
-            @Html.DisplayFor(model => model.Tlf)
-        </div>
-    </div>
-</div>
+    <dt>
+        Adresse
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Adresse)
+    </dd>
+
+    <dt>
+        Telefonnummer
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Tlf)
+
+    </dd>
+</dl>
