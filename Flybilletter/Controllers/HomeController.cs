@@ -171,8 +171,7 @@ namespace Flybilletter.Controllers
             return View(bestilling);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public ActionResult ReferanseSok(string referanse)
         {
             Bestilling bestilling = null;

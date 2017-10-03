@@ -1,7 +1,5 @@
-﻿@using (Html.BeginForm("ReferanseSok", "Home", FormMethod.Post, new {@class = "form-inline", autocomplete = "off" }))
+﻿@using (Html.BeginForm("ReferanseSok", "Home", FormMethod.Get, new {@class = "form-inline", autocomplete = "off" }))
 {
-    @Html.AntiForgeryToken()
-
     <div class="form-group">
         <label for="referanse">Referanse</label>
         <input type="text" class="form-control" name="referanse">
