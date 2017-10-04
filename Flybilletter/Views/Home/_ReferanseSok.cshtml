@@ -1,0 +1,8 @@
+﻿@using (Html.BeginForm("ReferanseSok", "Home", FormMethod.Get, new {@class = "form-inline", autocomplete = "off" }))
+{
+    <div class="form-group">
+        <label for="referanse">Referanse</label>
+        <input type="text" class="form-control" name="referanse">
+        <button type="submit" class="btn btn-default">Finn referanse</button>
+    </div>
+}
