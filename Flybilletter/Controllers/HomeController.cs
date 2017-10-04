@@ -176,7 +176,7 @@ namespace Flybilletter.Controllers
         {
             Bestilling bestilling = null;
 
-            referanse = referanse.ToUpper();
+            referanse = referanse.ToUpper().Trim();
             var regex = new Regex("^[A-Z0-9]{6}$");
             bool isMatch = regex.IsMatch(referanse);
 
