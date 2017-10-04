@@ -45,15 +45,18 @@
 
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-           @Html.Partial("_Betaling");
+            @Html.Partial("_Betaling");
         </div>
     </div>
 </div>
 
+<div id="valideringFeilmelding" class="alert alert-warning hidden" role="alert">
+    <strong>Feil!</strong> Alle felter må bekreftes før man kan gå til betaling.
+</div>
 
 <div class="col-md-12">
-    <button type="submit" data-toggle="modal" data-target="#betalingsinformasjon" class="btn btn-success">Gå til betaling</button>
-    <button type="submit" class="btn btn-primary">Tilbake til søk</button>
+    <button id="gaaTilBetaling" class="btn btn-success">Gå til betaling</button>
+    <button class="btn btn-primary">Tilbake til søk</button>
 </div>
 
 
@@ -66,6 +69,29 @@
                 handleKundeInfoBtnClick(event, $(this).index() );
             });
         }
+
+        $("#gaaTilBetaling").click(function (event) {
+            var isValid = true;
+            var isBekreftet = true;
+
+            //Sjekk at alle forms er validert, samt bekreftet av bruker
+            $("form").each(function () {
+                var valid = $(this).valid();
+                if (!valid) isValid = false;
+
+                var bekreftet = $(this).attr("readonly");
+                if (!bekreftet) isBekreftet = false;
+            });
+
+            if (isValid && isBekreftet) {
+                $("#betalingsinformasjon").modal();
+                $("#valideringFeilmelding").addClass("hidden");
+            } else {
+                $("#valideringFeilmelding").removeClass("hidden");
+            }
+
+        });
+
     });
 
     function handleKundeInfoBtnClick(event, idNr) {
