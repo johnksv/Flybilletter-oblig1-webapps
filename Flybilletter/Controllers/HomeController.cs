@@ -143,7 +143,7 @@ namespace Flybilletter.Controllers
             do //Lag en unik UUID helt til det ikke finnes i databasen fra før.
             {
                 bestilling.Referanse = Guid.NewGuid().ToString().ToUpper().Substring(0, 6);
-            } while (db.Bestillinger.Where(best => best.Referanse == bestilling.Referanse).Any()); 
+            } while (db.Bestillinger.Where(best => best.Referanse == bestilling.Referanse).Any());
 
 
             //Vi må finne de orginale flygningene i databasen for å unngå exception om "Violation of PRIMARY KEY constraint"
@@ -184,8 +184,30 @@ namespace Flybilletter.Controllers
             {
                 bestilling = db.Bestillinger.Where(best => best.Referanse == referanse).First();
             }
-            
+
             return View("BestillingInformasjon", bestilling);
+        }
+
+        [HttpGet]
+        public string ReferanseEksisterer(string referanse)
+        {
+            string retur = "{{ \"exists\":\"{0}\", \"url\":\"{1}\" }}";
+            if (referanse == null) return string.Format(retur, false, null);
+
+            referanse = referanse.ToUpper().Trim();
+            var regex = new Regex("^[A-Z0-9]{6}$");
+            bool isMatch = regex.IsMatch(referanse);
+            bool exists = false;
+            string url = "";
+
+            if (isMatch)
+            {
+                exists = db.Bestillinger.Where(best => best.Referanse == referanse).Any();
+                if (exists) url = "/Home/ReferanseSok?referanse=" + referanse;
+            }
+
+
+            return string.Format(retur, exists, url);
         }
 
 
