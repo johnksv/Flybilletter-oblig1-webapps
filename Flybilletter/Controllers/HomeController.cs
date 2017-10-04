@@ -40,43 +40,71 @@ namespace Flybilletter.Controllers
         [HttpPost]
         public ActionResult Sok(Flybilletter.Models.SokViewModel innSok)
         {
-            //TODO: Mulig vi må gjøre om på denne; Er dette når man har valgt flygning og trykker "Neste"?
+            //TODO: Slå sammen mellomlanding (vise Bodø-Malpensa), Endre reisetid + pris, Radiobutton på kun én
 
             bool sammeTilOgFra = innSok.Til.Equals(innSok.Fra);
             var fra = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Fra).First(); //Hvis du tweaket i HTML-koden fortjener du ikke feilmelding
             var til = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Til).First();
 
-            List<Flygning> flygninger = null;
+            List<List<Flygning>> flygninger = null;
 
             if (ModelState.IsValid && !sammeTilOgFra && fra != null && til != null)
             {
-                flygninger = new List<Flygning>();
+                flygninger = new List<List<Flygning>>();
                 List<Flygning> fraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(fra.ID)).ToList();
                 List<Flygning> tilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(til.ID)).ToList();
-
-                foreach (Flygning flygning in fraListe)
+                List<Flygning> turListe = new List<Flygning>();
+                List<Flygning> returListe = new List<Flygning>();
+                foreach (Flygning fraFly in fraListe)
                 {
-                    if (flygning.Rute.Til == til && flygning.AvgangsTid.Date == innSok.Avreise.Date)
-                        flygninger.Add(flygning);
+                    if (fraFly.Rute.Til == til)
+                    {
+                        if (fraFly.AvgangsTid.Date == innSok.Avreise.Date)
+                        turListe.Add(fraFly);
+                    }
+                    else
+                    { 
+                        foreach (Flygning tilFly in tilListe)
+                        {
+                            if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Avreise.Date && 
+                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1,0,0))
+                            {
+                                turListe.Add(fraFly);
+                                turListe.Add(tilFly);
+                                break;
+                            }
+                        }
+                    }
                 }
 
-
+                
                 List<Flygning> returFraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(til.ID)).ToList();
                 List<Flygning> returTilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(fra.ID)).ToList();
 
-                foreach (Flygning flygning in returFraListe)
+                foreach (Flygning fraFly in returFraListe)
                 {
-                    if (flygning.Rute.Til == fra)
+                    if (fraFly.Rute.Til == fra)
                     {
-
-                        if (flygning.AvgangsTid.Date == innSok.Retur.Date)
-                            flygninger.Add(flygning);
+                        if (fraFly.AvgangsTid.Date == innSok.Retur.Date)
+                        returListe.Add(fraFly);
                     }
                     else
-                    {
-                        // Hvis det går flere flygninger til flere enn en flyplass
+                    { 
+                        foreach (Flygning tilFly in returTilListe)
+                        {
+                            //TODO: Ta høyde for tid
+                            if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Retur.Date &&
+                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
+                            {
+                                returListe.Add(fraFly);
+                                returListe.Add(tilFly);
+                                break;
+                            }
+                        }
                     }
                 }
+                flygninger.Add(turListe);
+                flygninger.Add(returListe);
             }
 
             ViewBag.flyplasser = db.Flyplasser.ToList();
