@@ -12,31 +12,37 @@
 
 @foreach (var item in Model.Flygninger)
 {
-    <p>@item.AnkomstTid.ToShortDateString() - @item.AvgangsTid.ToShortDateString()</p>
+    @Html.DisplayFor(model => item);
 }
 
 <hr />
 <h3>Reisende</h3>
-    
-    @using (Html.BeginForm())
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    for (int i = 0, antall = 1; i < Model.Kunder.Count; i++, antall++)
     {
-        @Html.AntiForgeryToken()
-
-        for (int i = 0, a = 1; i < Model.Kunder.Count; i++, a++)
-        {
-            <h4>Passasjer @a</h4>
-            @Html.EditorFor(model => model.Kunder[i], new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Kunder, "", new { @class = "text-danger" })
-        }
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Lagre" class="btn btn-default" />
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Passasjer @antall</h3>
+            </div>
+            <div class="panel-body">
+                @Html.EditorFor(model => model.Kunder[i], new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Kunder, "", new { @class = "text-danger" })
             </div>
         </div>
-
     }
-   
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Lagre detaljer" class="btn btn-" />
+        </div>
+    </div>
+
+}
+
 <div>
     @Html.ActionLink("Tilbake til søk", "Index")
 </div>
