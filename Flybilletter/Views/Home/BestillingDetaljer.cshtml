@@ -18,31 +18,101 @@
 <hr />
 <h3>Reisende</h3>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
 
-    for (int i = 0, antall = 1; i < Model.Kunder.Count; i++, antall++)
+
+@for (int i = 0, antall = 1; i < Model.Kunder.Count; i++, antall++)
+{
+    using (Html.BeginForm(null, null, FormMethod.Post, new { id = "confirmForm-" + i, @class = "passasjerBekreftelse" })) ///Home/BestillingDetaljer
     {
+        @Html.AntiForgeryToken()
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Passasjer @antall</h3>
             </div>
-            <div class="panel-body">
+            <div id="kundeInformasjon-@i" class="panel-body">
                 @Html.EditorFor(model => model.Kunder[i], new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Kunder, "", new { @class = "text-danger" })
+
+            </div>
+            <div class="panel-footer">
+                <button id="kundeInformasjonBtn-@i" class="btn btn-success">Bekreft informasjon</button>
             </div>
         </div>
     }
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Lagre detaljer" class="btn btn-" />
-        </div>
-    </div>
-
 }
 
-<div>
-    @Html.ActionLink("Tilbake til søk", "Index")
+<div class="modal" id="betalingsinformasjon" role="dialog">
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @Html.Partial("_Betaling");
+        </div>
+    </div>
 </div>
+
+<div id="valideringFeilmelding" class="alert alert-warning hidden" role="alert">
+    <strong>Feil!</strong> Alle felter må bekreftes før man kan gå til betaling.
+</div>
+
+<div class="col-md-12">
+    <button id="gaaTilBetaling" class="btn btn-success">Gå til betaling</button>
+    <button class="btn btn-primary">Tilbake til søk</button>
+</div>
+
+
+
+<script>
+    $(function () {
+        var antallKunder = @Model.Kunder.Count;
+        for (var i = 0; i < antallKunder; i++) {
+            $("#kundeInformasjonBtn-" + i).click(function (event) {
+                handleKundeInfoBtnClick(event, $(this).index() );
+            });
+        }
+
+        $("#gaaTilBetaling").click(function (event) {
+            var isValid = true;
+            var isBekreftet = true;
+
+            //Sjekk at alle forms er validert, samt bekreftet av bruker
+            $("passasjerBekreftelse").each(function () {
+                var valid = $(this).valid();
+                if (!valid) isValid = false;
+
+                var bekreftet = $(this).attr("readonly");
+                if (!bekreftet) isBekreftet = false;
+            });
+
+            if (isValid && isBekreftet) {
+                $("#betalingsinformasjon").modal();
+                $("#valideringFeilmelding").addClass("hidden");
+            } else {
+                $("#valideringFeilmelding").removeClass("hidden");
+            }
+
+        });
+
+    });
+
+    function handleKundeInfoBtnClick(event, idNr) {
+        event.preventDefault();
+        var btnId = "#kundeInformasjonBtn-" + idNr;
+        var divId = "#kundeInformasjon-" + idNr;
+
+        var isReadonly = $(divId + " :input").prop('readonly');
+        var isValid = $("#confirmForm-" + idNr).valid();
+
+        if (isReadonly) {
+            $(btnId).text("Bekreft informasjon");
+        } else if (isValid) {
+            $(btnId).text("Endre informasjon");
+        } else {
+            return; //Hvis formen ikke er valid
+        }
+
+        $(divId + " :input").prop('readonly', !isReadonly);
+        $(btnId).toggleClass("btn-success");
+        $(btnId).toggleClass("btn-warning");
+    }
+
+</script>

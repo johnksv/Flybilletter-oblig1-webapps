@@ -166,6 +166,7 @@
     <Content Include="Views\Home\_Flygninger.cshtml" />
     <Content Include="Views\Home\_ReferanseSok.cshtml" />
     <Content Include="Views\Home\BestillingInformasjon.cshtml" />
+    <Content Include="Views\Home\_Betaling.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
