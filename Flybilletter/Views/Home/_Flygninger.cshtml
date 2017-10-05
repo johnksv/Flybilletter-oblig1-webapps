@@ -1,4 +1,4 @@
-﻿@model List<List<Flybilletter.Models.Flygning>>
+﻿@model List<List<Flybilletter.Models.Reise>>
 
 @if (Model == null)
 {
@@ -10,7 +10,7 @@ else
     <h3>Flygninger:</h3>
     @Html.BeginForm()
     {
-            foreach (var flygningListe in Model)
+            foreach (var ReiseListe in Model)
             {
                 <table class="table">
                     <tr>
@@ -21,15 +21,15 @@ else
                         <th>Pris</th>
                         <th></th>
                     </tr>
-                    @foreach (var flygning in flygningListe)
+                    @foreach (var reise in ReiseListe)
                     {
                     <tr>
-                        <td>@flygning.Rute.Fra.Navn - @flygning.Rute.Til.Navn</td>
-                        <td>@flygning.AvgangsTid</td>
-                        <td>@flygning.AnkomstTid</td>
-                        <td>@(flygning.AnkomstTid - flygning.AvgangsTid)</td>
-                        <td>@flygning.Rute.BasePris</td>
-                        <td><input type="radio" value="@flygning" /></td>
+                        <td>@reise.Fra.Navn - @reise.Til.Navn</td>
+                        <td>@reise.Avgang</td>
+                        <td>@reise.Ankomst</td>
+                        <td>@(reise.Ankomst - reise.Avgang)</td>
+                        <td>@reise.Pris</td>
+                        <td><input type="radio" value="@reise" /></td>
                     </tr>
                     }
                 </table>
