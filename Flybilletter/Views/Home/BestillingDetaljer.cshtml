@@ -22,7 +22,7 @@
 
 @for (int i = 0, antall = 1; i < Model.Kunder.Count; i++, antall++)
 {
-    using (Html.BeginForm(null, null, FormMethod.Post, new { id = "confirmForm" })) ///Home/BestillingDetaljer
+    using (Html.BeginForm(null, null, FormMethod.Post, new { id = "confirmForm-" + i, @class = "passasjerBekreftelse" })) ///Home/BestillingDetaljer
     {
         @Html.AntiForgeryToken()
         <div class="panel panel-default">
@@ -75,7 +75,7 @@
             var isBekreftet = true;
 
             //Sjekk at alle forms er validert, samt bekreftet av bruker
-            $("form").each(function () {
+            $("passasjerBekreftelse").each(function () {
                 var valid = $(this).valid();
                 if (!valid) isValid = false;
 
@@ -100,7 +100,7 @@
         var divId = "#kundeInformasjon-" + idNr;
 
         var isReadonly = $(divId + " :input").prop('readonly');
-        var isValid = $("#confirmForm").valid();
+        var isValid = $("#confirmForm-" + idNr).valid();
 
         if (isReadonly) {
             $(btnId).text("Bekreft informasjon");
