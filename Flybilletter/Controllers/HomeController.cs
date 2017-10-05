@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using QuickGraph;
+using QuickGraph.Algorithms.ShortestPath;
+using QuickGraph.Algorithms.Observers;
+using QuickGraph.Algorithms;
 
 namespace Flybilletter.Controllers
 {
@@ -12,14 +16,36 @@ namespace Flybilletter.Controllers
     {
 
         private DB db = new DB();
+        private AdjacencyGraph<string, Edge<string>> graph = new AdjacencyGraph<string, Edge<string>>();
+        private Func<Edge<string>, double> flyavstander;
+
+        public HomeController() : base()
+        {
+            var flyplasser = db.Flyplasser.Select(flyplass => flyplass.ID).ToArray();
+            var ruter = db.Ruter.ToArray();
+
+            graph.AddVertexRange(flyplasser);
+
+
+
+            foreach (var rute in ruter)
+            {
+                var fra = rute.Fra.ID;
+                var til = rute.Til.ID;
+                var edge = new Edge<string>(fra, til);
+                graph.AddEdge(edge);
+            }
+
+            flyavstander = edge => db.Ruter.Where(rute => rute.Fra.ID == edge.Source && rute.Til.ID == edge.Target).ToList().Select(rute => rute.Reisetid.TotalMinutes).First();
+        }
+
 
         public ActionResult Index()
         {
             //FOR DEBUGGING. TODO: REMOVE
             var referanser = db.Bestillinger.Select(best => best.Referanse).ToArray();
             ViewBag.referanser = referanser;
-
-
+            Test();
             return View();
         }
 
@@ -35,6 +61,25 @@ namespace Flybilletter.Controllers
             };
 
             return View(model);
+        }
+
+        public void finnKortesteStiMellomRuter(Flyplass fra, Flyplass til)
+        {
+            finnKortesteStiMellomRuter(fra.ID, til.ID);
+        }
+
+
+        public void finnKortesteStiMellomRuter(string fraID, string tilID)
+        {
+            var tryFunction = graph.ShortestPathsDijkstra(flyavstander, fraID);
+
+            IEnumerable<Edge<string>> path;
+            if (tryFunction(tilID, out path))
+                foreach (var e in path)
+                {
+                    Response.Write(e.Source + " " + e.Target);
+                }
+
         }
 
         [HttpPost]
@@ -63,11 +108,11 @@ namespace Flybilletter.Controllers
                             turListe.Add(new Reise(fraFly));
                     }
                     else
-                    { 
+                    {
                         foreach (Flygning tilFly in tilListe)
                         {
-                            if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Avreise.Date && 
-                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1,0,0))
+                            if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Avreise.Date &&
+                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
                             {
                                 turListe.Add(new Reise(fraFly, tilFly));
                                 break;
@@ -76,7 +121,7 @@ namespace Flybilletter.Controllers
                     }
                 }
 
-                
+
                 List<Flygning> returFraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(til.ID)).ToList();
                 List<Flygning> returTilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(fra.ID)).ToList();
 
@@ -85,17 +130,17 @@ namespace Flybilletter.Controllers
                     if (fraFly.Rute.Til == fra)
                     {
                         if (fraFly.AvgangsTid.Date == innSok.Retur.Date)
-                        returListe.Add(new Reise(fraFly));
+                            returListe.Add(new Reise(fraFly));
                     }
                     else
-                    { 
+                    {
                         foreach (Flygning tilFly in returTilListe)
                         {
                             //TODO: Ta høyde for tid
                             if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Retur.Date &&
                                 (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
                             {
-                                returListe.Add(new Reise(fraFly,tilFly));
+                                returListe.Add(new Reise(fraFly, tilFly));
                                 break;
                             }
                         }

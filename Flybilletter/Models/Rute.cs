@@ -13,6 +13,6 @@ namespace Flybilletter.Models
         public double BasePris { get; set; } //faktor for å regne ut total pris for turen
         public virtual List<Flygning> Flygninger { get; set; }
 
-
+        public TimeSpan Reisetid { get; set; }
     }
 }

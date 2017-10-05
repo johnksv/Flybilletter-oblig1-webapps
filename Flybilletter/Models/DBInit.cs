@@ -39,25 +39,29 @@ namespace Flybilletter.Models
             {
                 Fra = BOO,
                 Til = OSL,
-                BasePris = 1199
+                BasePris = 1199,
+                Reisetid = new TimeSpan(1,0,0)
             };
             var OSLBOO = new Rute()
             {
                 Fra = OSL,
                 Til = BOO,
-                BasePris = 1199
+                BasePris = 1199,
+                Reisetid = new TimeSpan(1, 0, 0)
             };
             var OSLMXP = new Rute()
             {
                 Fra = OSL,
                 Til = MXP,
-                BasePris = 1499
+                BasePris = 1499,
+                Reisetid = new TimeSpan(1, 30, 0)
             };
             var MXPOSL = new Rute()
             {
                 Fra = MXP,
                 Til = OSL,
-                BasePris = 1499
+                BasePris = 1499,
+                Reisetid = new TimeSpan(1, 30, 0)
             };
 
             var Ola = new Kunde()
@@ -117,7 +121,6 @@ namespace Flybilletter.Models
                 var flygningBOOOSL = new Flygning()
                 {
                     AvgangsTid = DateTime.Today.AddHours(i),
-                    AnkomstTid = DateTime.Today.AddHours(i + 1),
                     Fly = Boeing737_1,
                     Rute = BOOOSL
                 };
@@ -125,7 +128,6 @@ namespace Flybilletter.Models
                 var flygningOSLBOO = new Flygning()
                 {
                     AvgangsTid = DateTime.Today.AddHours(i + 2),
-                    AnkomstTid = DateTime.Today.AddHours(i + 3),
                     Fly = flygningBOOOSL.Fly,
                     Rute = OSLBOO
                 };
@@ -133,7 +135,6 @@ namespace Flybilletter.Models
                 var flygningMXPOSL = new Flygning()
                 {
                     AvgangsTid = DateTime.Today.AddHours(i + 0.5),
-                    AnkomstTid = DateTime.Today.AddHours(i + 2.5),
                     Fly = AirbusA380_1,
                     Rute = MXPOSL
                 };
@@ -141,7 +142,6 @@ namespace Flybilletter.Models
                 var flygningOSLMXP = new Flygning()
                 {
                     AvgangsTid = DateTime.Today.AddHours(i + 4),
-                    AnkomstTid = DateTime.Today.AddHours(i + 6),
                     Fly = flygningMXPOSL.Fly,
                     Rute = OSLMXP
                 };

@@ -12,7 +12,11 @@ namespace Flybilletter.Models
         public virtual Rute Rute { get; set; }
         public virtual Fly Fly { get; set; }
         public DateTime AvgangsTid { get; set; }
-        public DateTime AnkomstTid { get; set; }
+        public DateTime AnkomstTid { get
+            {
+                return AvgangsTid + Rute.Reisetid;
+            }
+        }
         
     }
 }
