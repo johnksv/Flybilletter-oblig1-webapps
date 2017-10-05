@@ -19,6 +19,8 @@ namespace Flybilletter.Models
 
         public DateTime Retur { get; set; }
 
+        public KredittkortViewModel Kredittkort { get; set; }
+
         [Required]
         public List<Kunde> Kunder { get; set; }
 

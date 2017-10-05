@@ -137,6 +137,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BestillingViewModel.cs" />
+    <Compile Include="Models\KredittkortViewModel.cs" />
     <Compile Include="Models\SokViewModel.cs" />
     <Compile Include="Models\DB.cs" />
     <Compile Include="Models\DBInit.cs" />
@@ -166,7 +167,7 @@
     <Content Include="Views\Home\_Flygninger.cshtml" />
     <Content Include="Views\Home\_ReferanseSok.cshtml" />
     <Content Include="Views\Home\BestillingInformasjon.cshtml" />
-    <Content Include="Views\Home\_Betaling.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\KredittkortViewModel.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
