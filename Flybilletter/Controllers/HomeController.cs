@@ -106,6 +106,7 @@ namespace Flybilletter.Controllers
 
                 Session["turListe"] = turListe;
                 Session["returListe"] = returListe;
+                Session["antallbilletter"] = innSok.AntallBilletter;
 
             }
 
@@ -124,16 +125,19 @@ namespace Flybilletter.Controllers
             if (returIndeks < 0 || returIndeks >= returListe.Count) RedirectToAction("Index");
 
 
-            List<Kunde> kunder = new List<Kunde>();
-            kunder.Add(new Kunde());
+            int antallBilletter = (int) Session["antallbilletter"];
 
+            var kunde = new List<Kunde>();
+            for (var i = 0; i < antallBilletter; i++)
+            {
+                kunde.Add(new Kunde());
+            }
 
             var bestillingsdata = new BestillingViewModel()
             {
                 Tur = turListe[turIndeks],
                 Retur = returListe[returIndeks],
-                AntallBilletter = 2,
-                Kunder = kunder
+                Kunder = kunde
             };
 
             
