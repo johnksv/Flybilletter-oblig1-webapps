@@ -8,9 +8,9 @@
 {
 
     <h3>Direkte aksess ikke tillatt</h3>
+    return;
 }
-else
-{
+    
 
     <h2>Informasjon om bestilling</h2>
 
@@ -18,13 +18,13 @@ else
 
 
 
-    foreach (var item in Model.Tur.Flygninger)
+    @foreach (var item in Model.Tur.Flygninger)
     {
         @Html.DisplayFor(model => item);
     }
 
 
-    if (Model.Retur != null)
+    @if (Model.Retur != null)
     {
         <h3>@Model.Retur.Fra.By - @Model.Retur.Til.By</h3>
 
@@ -39,10 +39,10 @@ else
     <h3>Reisende</h3>
 
 
-
-    for (int i = 0, antall = 1; i < Model.Kunder.Count; i++, antall++)
+<div class="row">
+    @for (int i = 0, antall = 1; i < Model.Kunder.Count; i++, antall++)
     {
-        using (Html.BeginForm(null, null, FormMethod.Post, new { id = "confirmForm-" + i, @class = "passasjerBekreftelse", @autocomplete = "false" })) ///Home/BestillingDetaljer
+        using (Html.BeginForm(null, null, FormMethod.Post, new { id = "confirmForm-" + i, @class = "passasjerBekreftelse col-md-6", @autocomplete = "false" })) ///Home/BestillingDetaljer
         {
             @Html.AntiForgeryToken()
             <div class="panel panel-default">
@@ -62,7 +62,12 @@ else
                 </div>
             </div>
         }
+
     }
+</div>
+
+
+    
 
     <div class="modal" id="betalingsinformasjon" role="dialog">
 
@@ -73,7 +78,7 @@ else
         </div>
     </div>
 
-    <div id="valideringFeilmelding" class="alert alert-info" role="alert">
+    <div id="valideringFeilmelding" class="alert alert-info col-md-12" role="alert">
         Alle felter må bekreftes før man kan gå til betaling.
     </div>
 
@@ -92,7 +97,8 @@ else
         var antallKunder = @Model.Kunder.Count;
         for (var i = 0; i < antallKunder; i++) {
             $("#kundeInformasjonBtn-" + i).click(function (event) {
-                handleKundeInfoBtnClick(event, $(this)[0].id.replace("kundeInformasjonBtn-", ""));
+                var knappID = $(this)[0].id.replace("kundeInformasjonBtn-", "");
+                handleKundeInfoBtnClick(event, knappID);
                 var okForBetaling = erFormsBekreftetOgValid();
                 if (okForBetaling) {
                     $("#gaaTilBetaling").removeClass("hidden");
@@ -150,4 +156,3 @@ else
     }
 
     </script>
-}
