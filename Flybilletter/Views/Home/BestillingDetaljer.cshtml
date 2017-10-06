@@ -10,33 +10,33 @@
     <h3>Direkte aksess ikke tillatt</h3>
     return;
 }
-    
-
-    <h2>Informasjon om bestilling</h2>
-
-    <h3>@Model.Tur.Fra.By - @Model.Tur.Til.By</h3>
 
 
+<h2>Informasjon om bestilling</h2>
 
-    @foreach (var item in Model.Tur.Flygninger)
+<h3>@Model.Tur.Fra.By - @Model.Tur.Til.By</h3>
+
+
+
+@foreach (var item in Model.Tur.Flygninger)
+{
+    @Html.DisplayFor(model => item);
+}
+
+
+@if (Model.Retur != null)
+{
+    <h3>@Model.Retur.Fra.By - @Model.Retur.Til.By</h3>
+
+    foreach (var item in Model.Retur.Flygninger)
     {
         @Html.DisplayFor(model => item);
     }
+}
 
 
-    @if (Model.Retur != null)
-    {
-        <h3>@Model.Retur.Fra.By - @Model.Retur.Til.By</h3>
-
-        foreach (var item in Model.Retur.Flygninger)
-        {
-            @Html.DisplayFor(model => item);
-        }
-    }
-
-
-    <hr />
-    <h3>Reisende</h3>
+<hr />
+<h3>Reisende</h3>
 
 
 <div class="row">
@@ -67,32 +67,32 @@
 </div>
 
 
-    
 
-    <div class="modal" id="betalingsinformasjon" role="dialog">
 
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                @Html.EditorFor(model => model.Kredittkort)
-            </div>
+<div class="modal" id="betalingsinformasjon" role="dialog">
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @Html.EditorFor(model => model.Kredittkort)
         </div>
     </div>
+</div>
 
-    <div id="valideringFeilmelding" class="alert alert-info col-md-12" role="alert">
-        Alle felter må bekreftes før man kan gå til betaling.
-    </div>
+<div id="valideringFeilmelding" class="alert alert-info col-md-12" role="alert">
+    Alle felter må bekreftes før man kan gå til betaling.
+</div>
 
-    <div>
-        <button id="gaaTilBetaling" class="btn btn-success hidden">Gå til betaling</button>
+<div>
+    <button id="gaaTilBetaling" class="btn btn-success hidden">Gå til betaling</button>
 
-    </div>
+</div>
 
-    <div style="margin-top: 1em;">
-        <button class="btn btn-default">Tilbake til søk</button>
-    </div>
+<div style="margin-top: 1em;">
+    <button class="btn btn-default">Tilbake til søk</button>
+</div>
 
 
-    <script>
+<script>
     $(function () {
         var antallKunder = @Model.Kunder.Count;
         for (var i = 0; i < antallKunder; i++) {
@@ -155,4 +155,4 @@
         $(btnId).toggleClass("btn-default");
     }
 
-    </script>
+</script>
