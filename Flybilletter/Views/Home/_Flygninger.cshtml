@@ -10,8 +10,12 @@ else
     <h3>Flygninger:</h3>
     using (Html.BeginForm())
     {
-        foreach (var ReiseListe in Model)
+        for(var i = 0; i < Model.Count; i++)  //Maks 2 elementer. Indeks 0 for Tur, indeks 1 for retur
         {
+            var ReiseListe = Model[i];
+            string name = i == 0 ? "Tur" : "Retur";
+
+            <h4>@name</h4>
             <table class="table col-md-12 col-sm-12">
                 <tr>
                     <th>Rute</th>
@@ -58,7 +62,7 @@ else
                         <td>@reise.Ankomst</td>
                         <td>@(reise.Ankomst - reise.Avgang)</td>
                         <td>@reise.Pris</td>
-                        <td><input name="@ReiseListe.GetHashCode()" type="radio" value="@reise" /></td>
+                        <td><input name="@name" type="radio" value="@reise" /></td>
                     </tr>
                        }
             </table>
