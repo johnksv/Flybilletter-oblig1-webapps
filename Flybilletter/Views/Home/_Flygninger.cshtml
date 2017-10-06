@@ -12,7 +12,7 @@ else
     {
         foreach (var ReiseListe in Model)
         {
-            <table class="table">
+            <table class="table col-md-12 col-sm-12">
                 <tr>
                     <th>Rute</th>
                     <th>Avgang</th>
@@ -26,7 +26,7 @@ else
                     <tr>
                         @{if (reise.Mellomlanding > 0)
                             {
-                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@reise.GetHashCode()" data-toggle="collapse" class="btn btn-info">(+@reise.Mellomlanding)</a>
+                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@reise.GetHashCode()" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
                                     <div id="mellom-@reise.GetHashCode()" class="collapse">
                                         <table class="table col-md-1 col-sm-2">
                                             <th>Rute</th>
@@ -58,7 +58,7 @@ else
                         <td>@reise.Ankomst</td>
                         <td>@(reise.Ankomst - reise.Avgang)</td>
                         <td>@reise.Pris</td>
-                        <td><input type="radio" value="@reise" /></td>
+                        <td><input name="@ReiseListe.GetHashCode()" type="radio" value="@reise" /></td>
                     </tr>
                        }
             </table>
