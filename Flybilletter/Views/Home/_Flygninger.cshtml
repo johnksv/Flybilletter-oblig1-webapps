@@ -1,5 +1,13 @@
 ﻿@model List<List<Flybilletter.Models.Reise>>
 
+<script>
+    $('.mellomlandingInfo').each(function () {
+        $(this).click(function () {
+            $('.mellomlandinger').toggleClass("hidden");
+        });
+    });
+</script>
+
 @if (Model == null)
 {
     <h3>Feil. Uglydig søk-parametre</h3>
@@ -8,13 +16,13 @@ else
 {
 
     <h3>Flygninger:</h3>
-    @Html.BeginForm()
+    using (Html.BeginForm())
     {
         foreach (var ReiseListe in Model)
         {
             <table class="table">
                 <tr>
-                    <th>Fra-Til</th>
+                    <th>Rute</th>
                     <th>Avgang</th>
                     <th>Ankomst</th>
                     <th>Reisetid</th>
@@ -26,7 +34,27 @@ else
                     <tr>
                         @{if (reise.Mellomlanding > 0)
                             {
-                                <td>@reise.Fra.Navn - @reise.Til.Navn (+@reise.Mellomlanding)</td>
+                                <td>@reise.Fra.Navn - @reise.Til.Navn <div class="btn btn-info mellomlandingInfo">(+@reise.Mellomlanding)</div>
+                                    <div class="mellomlandinger hidden">
+                                        <table class="table col-md-1 col-sm-2">
+                                            <th>Rute</th>
+                                            <th>Avgang</th>
+                                            <th>Ankomst</th>
+                                            <th>Reisetid</th>
+                                            <th>Pris</th>
+                                            @foreach (var flygning in reise.Flygninger)
+                                            {
+                                                <tr>
+                                                    <td>@flygning.Rute.Fra.Navn - @flygning.Rute.Til.Navn</td>
+                                                    <td>@flygning.AvgangsTid</td>
+                                                    <td>@flygning.AnkomstTid</td>
+                                                    <td>@(flygning.AnkomstTid - flygning.AvgangsTid)</td>
+                                                    <td>@flygning.Rute.BasePris</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </td>
                             }
                             else
                             {
@@ -40,7 +68,7 @@ else
                         <td>@reise.Pris</td>
                         <td><input type="radio" value="@reise" /></td>
                     </tr>
-                 }
+                       }
             </table>
         }
     }
