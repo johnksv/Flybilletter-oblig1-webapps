@@ -8,13 +8,17 @@ else
 {
 
     <h3>Flygninger:</h3>
-    @Html.BeginForm()
+    using (Html.BeginForm())
     {
-        foreach (var ReiseListe in Model)
+        for(var i = 0; i < Model.Count; i++)  //Maks 2 elementer. Indeks 0 for Tur, indeks 1 for retur
         {
-            <table class="table">
+            var ReiseListe = Model[i];
+            string name = i == 0 ? "Tur" : "Retur";
+
+            <h4>@name</h4>
+            <table class="table col-md-12 col-sm-12">
                 <tr>
-                    <th>Fra-Til</th>
+                    <th>Rute</th>
                     <th>Avgang</th>
                     <th>Ankomst</th>
                     <th>Reisetid</th>
@@ -26,7 +30,27 @@ else
                     <tr>
                         @{if (reise.Mellomlanding > 0)
                             {
-                                <td>@reise.Fra.Navn - @reise.Til.Navn (+@reise.Mellomlanding)</td>
+                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@reise.GetHashCode()" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                                    <div id="mellom-@reise.GetHashCode()" class="collapse">
+                                        <table class="table col-md-1 col-sm-2">
+                                            <th>Rute</th>
+                                            <th>Avgang</th>
+                                            <th>Ankomst</th>
+                                            <th>Reisetid</th>
+                                            <th>Pris</th>
+                                            @foreach (var flygning in reise.Flygninger)
+                                            {
+                                                <tr>
+                                                    <td>@flygning.Rute.Fra.Navn - @flygning.Rute.Til.Navn</td>
+                                                    <td>@flygning.AvgangsTid</td>
+                                                    <td>@flygning.AnkomstTid</td>
+                                                    <td>@(flygning.AnkomstTid - flygning.AvgangsTid)</td>
+                                                    <td>@flygning.Rute.BasePris</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </td>
                             }
                             else
                             {
@@ -38,9 +62,9 @@ else
                         <td>@reise.Ankomst</td>
                         <td>@(reise.Ankomst - reise.Avgang)</td>
                         <td>@reise.Pris</td>
-                        <td><input type="radio" value="@reise" /></td>
+                        <td><input name="@name" type="radio" value="@reise" /></td>
                     </tr>
-                 }
+                       }
             </table>
         }
     }
