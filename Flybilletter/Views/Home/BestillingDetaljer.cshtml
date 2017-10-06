@@ -53,15 +53,18 @@
     </div>
 </div>
 
-<div id="valideringFeilmelding" class="alert alert-warning hidden" role="alert">
-    <strong>Feil!</strong> Alle felter må bekreftes før man kan gå til betaling.
+<div id="valideringFeilmelding" class="alert alert-info" role="alert">
+    Alle felter må bekreftes før man kan gå til betaling.
 </div>
 
-<div class="col-md-12">
-    <button id="gaaTilBetaling" class="btn btn-success">Gå til betaling</button>
-    <button class="btn btn-primary">Tilbake til søk</button>
+<div>
+    <button id="gaaTilBetaling" class="btn btn-success hidden">Gå til betaling</button>
+
 </div>
 
+<div style="margin-top: 1em;">
+    <button class="btn btn-default">Tilbake til søk</button>
+</div>
 
 
 <script>
@@ -69,33 +72,41 @@
         var antallKunder = @Model.Kunder.Count;
         for (var i = 0; i < antallKunder; i++) {
             $("#kundeInformasjonBtn-" + i).click(function (event) {
-                handleKundeInfoBtnClick(event, $(this).index() );
+                handleKundeInfoBtnClick(event, $(this).index());
+                var okForBetaling = erFormsBekreftetOgValid();
+                if (okForBetaling) {
+                    $("#gaaTilBetaling").removeClass("hidden");
+                    $("#valideringFeilmelding").addClass("hidden");
+                } else {
+                    $("#valideringFeilmelding").removeClass("hidden");
+                    $("#gaaTilBetaling").addClass("hidden");
+                }
             });
         }
 
         $("#gaaTilBetaling").click(function (event) {
-            var isValid = true;
-            var isBekreftet = true;
-
-            //Sjekk at alle forms er validert, samt bekreftet av bruker
-            $(".passasjerBekreftelse").each(function () {
-                var valid = $(this).valid();
-                if (!valid) isValid = false;
-
-                var bekreftet = $(this).find("fieldset").prop("disabled");
-                if (!bekreftet) isBekreftet = false;
-            });
-
-            if (isValid && isBekreftet) {
+            if (erFormsBekreftetOgValid()) {
                 $("#betalingsinformasjon").modal();
-                $("#valideringFeilmelding").addClass("hidden");
-            } else {
-                $("#valideringFeilmelding").removeClass("hidden");
             }
-
         });
 
     });
+
+    function erFormsBekreftetOgValid() {
+        var isValid = true;
+        var isBekreftet = true;
+
+        //Sjekk at alle forms er validert, samt bekreftet av bruker
+        $(".passasjerBekreftelse").each(function () {
+            var valid = $(this).valid();
+            if (!valid) isValid = false;
+
+            var bekreftet = $(this).find("fieldset").prop("disabled");
+            if (!bekreftet) isBekreftet = false;
+        });
+
+        return isValid && isBekreftet;
+    }
 
     function handleKundeInfoBtnClick(event, idNr) {
         event.preventDefault();
@@ -115,7 +126,7 @@
 
         $(fieldSetId).prop('disabled', !isDisabled);
         $(btnId).toggleClass("btn-success");
-        $(btnId).toggleClass("btn-warning");
+        $(btnId).toggleClass("btn-default");
     }
 
 </script>

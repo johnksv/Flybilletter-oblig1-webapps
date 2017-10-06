@@ -10,19 +10,19 @@ namespace Flybilletter.Models
     {
 
         [Required]
-        [RegularExpression("^[A-Za-zæøåÆØÅ ]+$", ErrorMessage = "Ugyldig navn.")]
+        [RegularExpression("^[A-Za-zæøåÆØÅöÖäÄëË ]+$", ErrorMessage = "Feltet inneholder ugyldige bokstaver")]
         public string Kortholder { get; set; }
 
         [Required]
-        [RegularExpression("^[0-9]{16}$", ErrorMessage = "Ugyldig kortnummer.")]
+        [RegularExpression("^[0-9]{16}$", ErrorMessage = "Ugyldig kortnummer. Må være 16 tall.")]
         public int Kortnummer { get; set; }
 
         [Required]
-        [RegularExpression("^[0-9]{3}$", ErrorMessage = "Ugyldig cvc.")]
+        [RegularExpression("^[0-9]{3}$", ErrorMessage = "Ugyldig cvc. Må være 3 tall.")]
         public int CVC{ get; set; }
 
         [Required]
-        [RegularExpression("^[0-9]{2}-[0-9]{2}$", ErrorMessage = "Ugyldig utløpsdato")]
+        [RegularExpression("^[0-9]{2}-[0-9]{2}$", ErrorMessage = "Ugyldig utløpsdato. Må være av format MM-ÅÅ.")]
         public string Utlop { get; set; }
     }
 }
