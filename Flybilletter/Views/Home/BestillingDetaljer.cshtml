@@ -92,15 +92,15 @@ else
         var antallKunder = @Model.Kunder.Count;
         for (var i = 0; i < antallKunder; i++) {
             $("#kundeInformasjonBtn-" + i).click(function (event) {
-                handleKundeInfoBtnClick(event, $(this).index());
+                handleKundeInfoBtnClick(event, $(this)[0].id.replace("kundeInformasjonBtn-", ""));
                 var okForBetaling = erFormsBekreftetOgValid();
                 if (okForBetaling) {
                     $("#gaaTilBetaling").removeClass("hidden");
                     $("#valideringFeilmelding").addClass("hidden");
-                } else {
+            } else {
                     $("#valideringFeilmelding").removeClass("hidden");
                     $("#gaaTilBetaling").addClass("hidden");
-                }
+        }
             });
         }
 
