@@ -140,17 +140,12 @@ namespace Flybilletter.Controllers
 
                 //Siden gjeldene referer til det samme som Session["GjeldendeBestilling"] slipper vi å gjøre noe mer
                 gjeldende.Kunder = bestillingViewModel.Kunder;
-                return RedirectToAction("BestillingOppsummering");
+                return RedirectToAction("Kvittering");
             }
 
             return View(gjeldende);
         }
 
-        public ActionResult BestillingOppsummering()
-        {
-            var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
-            return View(gjeldende);
-        }
 
         [ValidateAntiForgeryToken]
         public ActionResult GenererReferanse()
