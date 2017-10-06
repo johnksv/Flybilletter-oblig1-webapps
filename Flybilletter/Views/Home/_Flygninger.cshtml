@@ -8,12 +8,14 @@ else
 {
 
     <h3>Flygninger:</h3>
-    using (Html.BeginForm())
+    using (Html.BeginForm("ValgtReise", "Home"))
     {
-        for(var i = 0; i < Model.Count; i++)  //Maks 2 elementer. Indeks 0 for Tur, indeks 1 for retur
+
+        for (var i = 0; i < Model.Count; i++)  //Maks 2 elementer. Indeks 0 for Tur, indeks 1 for retur
         {
             var ReiseListe = Model[i];
             string name = i == 0 ? "Tur" : "Retur";
+            string radioButtonName = i == 0 ? "turindeks" : "returindeks";
 
             <h4>@name</h4>
             <table class="table col-md-12 col-sm-12">
@@ -25,8 +27,9 @@ else
                     <th>Pris</th>
                     <th></th>
                 </tr>
-                @foreach (var reise in ReiseListe)
+                @for(var j = 0; j < ReiseListe.Count; j++)
                 {
+                    var reise = ReiseListe[j];
                     <tr>
                         @{if (reise.Mellomlanding > 0)
                             {
@@ -62,10 +65,11 @@ else
                         <td>@reise.Ankomst</td>
                         <td>@(reise.Ankomst - reise.Avgang)</td>
                         <td>@reise.Pris</td>
-                        <td><input name="@name" type="radio" value="@reise" /></td>
+                        <td><input name="@radioButtonName" type="radio" value="@j" /></td>
                     </tr>
                        }
             </table>
         }
+                                    <button type="submit">asdasdsadas</button>
     }
 }

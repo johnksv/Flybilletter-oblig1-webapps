@@ -13,7 +13,9 @@ namespace Flybilletter.Models
 
         public String Til { get; set; }
 
-        public IEnumerable<Flygning> Flygninger { get; set; }
+        public Reise Tur { get; set; }
+
+        public Reise Retur { get; set; }
 
         public DateTime Avreise { get; set; }
 

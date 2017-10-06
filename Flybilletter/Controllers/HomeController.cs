@@ -63,11 +63,11 @@ namespace Flybilletter.Controllers
                             turListe.Add(new Reise(fraFly));
                     }
                     else
-                    { 
+                    {
                         foreach (Flygning tilFly in tilListe)
                         {
-                            if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Avreise.Date && 
-                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1,0,0))
+                            if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Avreise.Date &&
+                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
                             {
                                 turListe.Add(new Reise(fraFly, tilFly));
                                 break;
@@ -76,7 +76,7 @@ namespace Flybilletter.Controllers
                     }
                 }
 
-                
+
                 List<Flygning> returFraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(til.ID)).ToList();
                 List<Flygning> returTilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(fra.ID)).ToList();
 
@@ -85,17 +85,17 @@ namespace Flybilletter.Controllers
                     if (fraFly.Rute.Til == fra)
                     {
                         if (fraFly.AvgangsTid.Date == innSok.Retur.Date)
-                        returListe.Add(new Reise(fraFly));
+                            returListe.Add(new Reise(fraFly));
                     }
                     else
-                    { 
+                    {
                         foreach (Flygning tilFly in returTilListe)
                         {
                             //TODO: Ta høyde for tid
                             if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Retur.Date &&
                                 (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
                             {
-                                returListe.Add(new Reise(fraFly,tilFly));
+                                returListe.Add(new Reise(fraFly, tilFly));
                                 break;
                             }
                         }
@@ -103,10 +103,32 @@ namespace Flybilletter.Controllers
                 }
                 reiser.Add(turListe);
                 reiser.Add(returListe);
+
+                Session["turListe"] = turListe;
+                Session["returListe"] = returListe;
+
             }
 
             ViewBag.flyplasser = db.Flyplasser.ToList();
             return PartialView("_Flygninger", reiser);
+        }
+
+        [HttpPost]
+        public ActionResult ValgtReise(int turIndeks, int returIndeks)
+        {
+
+            var turListe = (List<Reise>) Session["turListe"];
+            var returListe = (List<Reise>) Session["returListe"];
+
+            if (turIndeks < 0 || turIndeks >= turListe.Count) RedirectToAction("Index");
+            if (returIndeks < 0 || returIndeks >= returListe.Count) RedirectToAction("Index");
+
+            Reise tur = turListe[turIndeks];
+            Reise retur = returListe[returIndeks];
+
+            
+
+            return RedirectToAction("BestillingDetaljer");
         }
 
 
