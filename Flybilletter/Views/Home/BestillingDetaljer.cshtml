@@ -4,70 +4,90 @@
     ViewBag.Title = "Bestille";
 }
 
-<h2>Informasjon om bestilling</h2>
-
-<h3>@Model.Fra - @Model.Til</h3>
-
-
-
-@foreach (var item in Model.Flygninger)
+@if (Model == null)
 {
-    @Html.DisplayFor(model => item);
+
+    <h3>Direkte aksess ikke tillatt</h3>
 }
-
-<hr />
-<h3>Reisende</h3>
-
-
-
-@for (int i = 0, antall = 1; i < Model.Kunder.Count; i++, antall++)
+else
 {
-    using (Html.BeginForm(null, null, FormMethod.Post, new { id = "confirmForm-" + i, @class = "passasjerBekreftelse", @autocomplete = "false" })) ///Home/BestillingDetaljer
+
+    <h2>Informasjon om bestilling</h2>
+
+    <h3>@Model.Tur.Fra.By - @Model.Tur.Til.By</h3>
+
+
+
+    foreach (var item in Model.Tur.Flygninger)
     {
-        @Html.AntiForgeryToken()
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Passasjer @antall</h3>
-            </div>
-
-            <div class="panel-body">
-                <fieldset id="kundeInformasjon-@i">
-                    @Html.EditorFor(model => model.Kunder[i], new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Kunder, "", new { @class = "text-danger" })
-                </fieldset>
-            </div>
-
-            <div class="panel-footer">
-                <button id="kundeInformasjonBtn-@i" class="btn btn-success">Bekreft informasjon</button>
-            </div>
-        </div>
+        @Html.DisplayFor(model => item);
     }
-}
 
-<div class="modal" id="betalingsinformasjon" role="dialog">
 
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            @Html.EditorFor(model => model.Kredittkort)
+    if (Model.Retur != null)
+    {
+        <h3>@Model.Retur.Fra.By - @Model.Retur.Til.By</h3>
+
+        foreach (var item in Model.Retur.Flygninger)
+        {
+            @Html.DisplayFor(model => item);
+        }
+    }
+
+
+    <hr />
+    <h3>Reisende</h3>
+
+
+
+    for (int i = 0, antall = 1; i < Model.Kunder.Count; i++, antall++)
+    {
+        using (Html.BeginForm(null, null, FormMethod.Post, new { id = "confirmForm-" + i, @class = "passasjerBekreftelse", @autocomplete = "false" })) ///Home/BestillingDetaljer
+        {
+            @Html.AntiForgeryToken()
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Passasjer @antall</h3>
+                </div>
+
+                <div class="panel-body">
+                    <fieldset id="kundeInformasjon-@i">
+                        @Html.EditorFor(model => model.Kunder[i], new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Kunder, "", new { @class = "text-danger" })
+                    </fieldset>
+                </div>
+
+                <div class="panel-footer">
+                    <button id="kundeInformasjonBtn-@i" class="btn btn-success">Bekreft informasjon</button>
+                </div>
+            </div>
+        }
+    }
+
+    <div class="modal" id="betalingsinformasjon" role="dialog">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                @Html.EditorFor(model => model.Kredittkort)
+            </div>
         </div>
     </div>
-</div>
 
-<div id="valideringFeilmelding" class="alert alert-info" role="alert">
-    Alle felter må bekreftes før man kan gå til betaling.
-</div>
+    <div id="valideringFeilmelding" class="alert alert-info" role="alert">
+        Alle felter må bekreftes før man kan gå til betaling.
+    </div>
 
-<div>
-    <button id="gaaTilBetaling" class="btn btn-success hidden">Gå til betaling</button>
+    <div>
+        <button id="gaaTilBetaling" class="btn btn-success hidden">Gå til betaling</button>
 
-</div>
+    </div>
 
-<div style="margin-top: 1em;">
-    <button class="btn btn-default">Tilbake til søk</button>
-</div>
+    <div style="margin-top: 1em;">
+        <button class="btn btn-default">Tilbake til søk</button>
+    </div>
 
 
-<script>
+    <script>
     $(function () {
         var antallKunder = @Model.Kunder.Count;
         for (var i = 0; i < antallKunder; i++) {
@@ -129,4 +149,5 @@
         $(btnId).toggleClass("btn-default");
     }
 
-</script>
+    </script>
+}

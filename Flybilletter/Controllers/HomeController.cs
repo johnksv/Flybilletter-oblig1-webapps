@@ -123,33 +123,22 @@ namespace Flybilletter.Controllers
             if (turIndeks < 0 || turIndeks >= turListe.Count) RedirectToAction("Index");
             if (returIndeks < 0 || returIndeks >= returListe.Count) RedirectToAction("Index");
 
-            Reise tur = turListe[turIndeks];
-            Reise retur = returListe[returIndeks];
+
+            List<Kunde> kunder = new List<Kunde>();
+            kunder.Add(new Kunde());
+
+
+            var bestillingsdata = new BestillingViewModel()
+            {
+                Tur = turListe[turIndeks],
+                Retur = returListe[returIndeks],
+                AntallBilletter = 2,
+                Kunder = kunder
+            };
 
             
 
-            return RedirectToAction("BestillingDetaljer");
-        }
-
-
-        public ActionResult BestillingDetaljer()
-        {
-
-            var fly = db.Flygninger.Include("Fly").Where(f => f.AvgangsTid > DateTime.Now).First();
-            var kunder = new List<Kunde>() { new Kunde() };
-
-            var model = new BestillingViewModel()
-            {
-                Flygninger = new List<Flygning>() { fly },
-                Fra = fly.Rute.Fra.By,
-                Til = fly.Rute.Til.By,
-                Kunder = kunder
-
-            };
-            //Lagrer gjeldende bestilling i session slik at vi har denne tilgjengelig vet eventuelle feilmeldinger og endringer.
-            Session["GjeldendeBestilling"] = model;
-
-            return View(model);
+            return View("BestillingDetaljer", bestillingsdata);
         }
 
 
@@ -173,6 +162,9 @@ namespace Flybilletter.Controllers
         public ActionResult GenererReferanse()
         {
             //TODO: Generer referanse, lagre i database
+
+
+
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
 
             var list = new List<Flygning>();
@@ -190,13 +182,13 @@ namespace Flybilletter.Controllers
 
 
             //Vi må finne de orginale flygningene i databasen for å unngå exception om "Violation of PRIMARY KEY constraint"
-            foreach (var flygning in gjeldende.Flygninger)
+            /*foreach (var flygning in gjeldende.Flygninger)
             {
                 var dbFlygning = db.Flygninger.Find(flygning.ID);
                 if (dbFlygning == null) return View(); //Det skjedde en feil
 
                 bestilling.Flygninger.Add(dbFlygning);
-            }
+            } */
 
             db.Bestillinger.Add(bestilling);
 
