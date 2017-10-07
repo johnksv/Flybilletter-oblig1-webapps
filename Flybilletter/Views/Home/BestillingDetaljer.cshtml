@@ -21,10 +21,15 @@
                 var okForBetaling = erFormsBekreftetOgValid();
                 if (okForBetaling) {
                     $("#gaaTilBetaling").removeClass("disabled");
+                    $("#gaaTilBetaling").removeClass("btn-default");
+                    $("#gaaTilBetaling").addClass("btn-success");
+
                     $("#valideringFeilmelding").addClass("hidden");
             } else {
                     $("#valideringFeilmelding").removeClass("hidden");
                     $("#gaaTilBetaling").addClass("disabled");
+                    $("#gaaTilBetaling").addClass("btn-default");
+                    $("#gaaTilBetaling").removeClass("btn-success");
         }
             });
         }
@@ -144,13 +149,13 @@
     </div>
 </div>
 
-<div id="valideringFeilmelding" class="alert alert-info col-md-12" role="alert">
-    Alle felter må bekreftes før man kan gå til betaling.
+<div>
+    <button id="gaaTilBetaling" class="btn btn-default disabled">Gå til betaling</button>
+
 </div>
 
-<div>
-    <button id="gaaTilBetaling" class="btn btn-success disabled">Gå til betaling</button>
-
+<div id="valideringFeilmelding" class="alert alert-info col-md-12" role="alert" style="margin-top: 0.5em;">
+    Alle felter må bekreftes før man kan gå til betaling.
 </div>
 
 <div style="margin-top: 1em;">
