@@ -3,19 +3,21 @@
 @if (Model == null)
 {
     <h3>Feil. Uglydig søk-parametre</h3>
+    return;
 }
-else
-{
+
 
     <h3>Flygninger:</h3>
-    using (Html.BeginForm("ValgtReise", "Home"))
+    @using (Html.BeginForm("ValgtReise", "Home"))
     {
 
         for (var i = 0; i < Model.Count; i++)  //Maks 2 elementer. Indeks 0 for Tur, indeks 1 for retur
         {
-            var ReiseListe = Model[i];
-            string name = i == 0 ? "Tur" : "Retur";
-            string radioButtonName = i == 0 ? "turindeks" : "returindeks";
+           @{ 
+               var ReiseListe = Model[i];
+               string name = i == 0 ? "Tur" : "Retur";
+               string radioButtonName = i == 0 ? "turindeks" : "returindeks";
+           }
 
             <h4>@name</h4>
             <table class="table table-striped col-md-12 col-sm-12">
@@ -74,4 +76,4 @@ else
         }
         <button class="btn btn-primary" type="submit">Velg flygninger</button>
     }
-}
+
