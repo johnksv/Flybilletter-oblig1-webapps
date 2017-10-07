@@ -20,11 +20,11 @@
                 handleKundeInfoBtnClick(event, knappID);
                 var okForBetaling = erFormsBekreftetOgValid();
                 if (okForBetaling) {
-                    $("#gaaTilBetaling").removeClass("hidden");
+                    $("#gaaTilBetaling").removeClass("disabled");
                     $("#valideringFeilmelding").addClass("hidden");
             } else {
                     $("#valideringFeilmelding").removeClass("hidden");
-                    $("#gaaTilBetaling").addClass("hidden");
+                    $("#gaaTilBetaling").addClass("disabled");
         }
             });
         }
@@ -149,7 +149,7 @@
 </div>
 
 <div>
-    <button id="gaaTilBetaling" class="btn btn-success hidden">Gå til betaling</button>
+    <button id="gaaTilBetaling" class="btn btn-success disabled">Gå til betaling</button>
 
 </div>
 
