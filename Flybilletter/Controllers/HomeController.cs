@@ -114,19 +114,24 @@ namespace Flybilletter.Controllers
             return PartialView("_Flygninger", reiser);
         }
 
+
+
         [HttpPost]
-        public ActionResult ValgtReise(int turIndeks, int returIndeks)
+        public ActionResult ValgtReise(string turIndeks, string returIndeks)
         {
 
             var turListe = (List<Reise>) Session["turListe"];
             var returListe = (List<Reise>) Session["returListe"];
 
-            if (turIndeks < 0 || turIndeks >= turListe.Count) RedirectToAction("Index");
-            if (returIndeks < 0 || returIndeks >= returListe.Count) RedirectToAction("Index");
+            int turIndeksInt = int.Parse(turIndeks);
+            int returIndeksInt = -1;
+            if(returIndeks != null) returIndeksInt = int.Parse(returIndeks);
+
+            if (turIndeksInt < 0 || turIndeksInt >= turListe.Count) RedirectToAction("Index");
+            if (returIndeksInt < -1 || returIndeksInt >= returListe.Count) RedirectToAction("Index");
 
 
             int antallBilletter = (int) Session["antallbilletter"];
-
             var kunde = new List<Kunde>();
             for (var i = 0; i < antallBilletter; i++)
             {
@@ -135,10 +140,11 @@ namespace Flybilletter.Controllers
 
             var bestillingsdata = new BestillingViewModel()
             {
-                Tur = turListe[turIndeks],
-                Retur = returListe[returIndeks],
+                Tur = turListe[turIndeksInt],
                 Kunder = kunde
             };
+
+            if (returIndeksInt >= 0) bestillingsdata.Retur = returListe[returIndeksInt];
 
             
 
