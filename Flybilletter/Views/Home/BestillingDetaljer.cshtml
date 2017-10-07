@@ -88,21 +88,27 @@
 <h3>@Model.Tur.Fra.By - @Model.Tur.Til.By</h3>
 
 
-
-@foreach (var item in Model.Tur.Flygninger)
-{
-    @Html.DisplayFor(model => item);
-}
+<div class="row"> 
+    @foreach (var item in Model.Tur.Flygninger) //Det er maks 2 elementer i listen, siden vi kun har maks 1 mellomlanding ATM
+    {
+        <div class="col-md-6">
+            @Html.DisplayFor(model => item)
+        </div>
+    }
+</div>
 
 
 @if (Model.Retur != null)
 {
     <h3>@Model.Retur.Fra.By - @Model.Retur.Til.By</h3>
-
-    foreach (var item in Model.Retur.Flygninger)
+<div class="row">
+    @foreach (var item in Model.Retur.Flygninger) 
     {
-        @Html.DisplayFor(model => item);
+        <div class="col-md-6">
+            @Html.DisplayFor(model => item)
+        </div>
     }
+</div>
 }
 
 
