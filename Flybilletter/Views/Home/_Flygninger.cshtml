@@ -19,14 +19,14 @@ else
 
             <h4>@name</h4>
             <table class="table table-striped col-md-12 col-sm-12">
-                <tr>
+                <thead>
                     <th>Rute</th>
                     <th>Avgang</th>
                     <th>Ankomst</th>
                     <th>Reisetid</th>
                     <th>Pris</th>
                     <th></th>
-                </tr>
+                </thead>
                 @for(var j = 0; j < ReiseListe.Count; j++)
                 {
                     var reise = ReiseListe[j];
@@ -36,11 +36,13 @@ else
                                 <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@i-@j" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
                                     <div id="mellom-@i-@j" class="collapse">
                                         <table class="table col-md-1 col-sm-2">
-                                            <th>Rute</th>
-                                            <th>Avgang</th>
-                                            <th>Ankomst</th>
-                                            <th>Reisetid</th>
-                                            <th>Pris</th>
+                                            <thead>
+                                                <th>Rute</th>
+                                                <th>Avgang</th>
+                                                <th>Ankomst</th>
+                                                <th>Reisetid</th>
+                                                <th>Pris</th>
+                                            </thead>
                                             @foreach (var flygning in reise.Flygninger)
                                             {
                                                 <tr>
