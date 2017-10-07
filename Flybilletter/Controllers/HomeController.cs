@@ -120,18 +120,18 @@ namespace Flybilletter.Controllers
         public ActionResult ValgtReise(string turIndeks, string returIndeks)
         {
 
-            var turListe = (List<Reise>) Session["turListe"];
-            var returListe = (List<Reise>) Session["returListe"];
+            var turListe = (List<Reise>)Session["turListe"];
+            var returListe = (List<Reise>)Session["returListe"];
 
             int turIndeksInt = int.Parse(turIndeks);
             int returIndeksInt = -1;
-            if(returIndeks != null) returIndeksInt = int.Parse(returIndeks);
+            if (returIndeks != null) returIndeksInt = int.Parse(returIndeks);
 
             if (turIndeksInt < 0 || turIndeksInt >= turListe.Count) RedirectToAction("Index");
             if (returIndeksInt < -1 || returIndeksInt >= returListe.Count) RedirectToAction("Index");
 
 
-            int antallBilletter = (int) Session["antallbilletter"];
+            int antallBilletter = (int)Session["antallbilletter"];
             var kunde = new List<Kunde>();
             for (var i = 0; i < antallBilletter; i++)
             {
@@ -146,8 +146,8 @@ namespace Flybilletter.Controllers
 
             if (returIndeksInt >= 0) bestillingsdata.Retur = returListe[returIndeksInt];
 
-            
 
+            Session["GjeldendeBestilling"] = bestillingsdata;
             return View("BestillingDetaljer", bestillingsdata);
         }
 
@@ -156,40 +156,20 @@ namespace Flybilletter.Controllers
         [ValidateAntiForgeryToken]
         public string Kunde(List<Kunde> Kunder)
         {
-            return "ASD";
+            //Hadde vi tatt høyde for kundehåndtering (som er oblig 2) hadde vi håndtert om kunden allerede eksisterte i databasen.
+            //Ved kall på denne metoden vet vi at det umidelbart kommer et kall til generer referanse
+            Session["KunderBestilling"] = Kunder;
+            return "Success";
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public string Betaling(BestillingViewModel kort)
-        {
-            return "ASD";
-        }
-
-
-        [HttpPost]
-        public ActionResult BestillingDetaljer(BestillingViewModel bestillingViewModel)
-        {
-            var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
-            if (ModelState.IsValid)
-            {
-
-                //Siden gjeldene referer til det samme som Session["GjeldendeBestilling"] slipper vi å gjøre noe mer
-                gjeldende.Kunder = bestillingViewModel.Kunder;
-                return RedirectToAction("Kvittering");
-            }
-
-            return View(gjeldende);
-        }
-
-
-        [ValidateAntiForgeryToken]
-        public ActionResult GenererReferanse()
+        public ActionResult GenererReferanse(BestillingViewModel kredittkortInformasjon)
         {
             //TODO: Generer referanse, lagre i database
+            var kunder = (List<Kunde>) Session["KunderBestilling"];
 
-
-
+            //Denne inneholder informasjon om Tur- og Retur-property
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
 
             var list = new List<Flygning>();
@@ -197,7 +177,7 @@ namespace Flybilletter.Controllers
             {
                 BestillingsTidspunkt = DateTime.Now,
                 Flygninger = new List<Flygning>(),
-                Passasjerer = gjeldende.Kunder
+                Passasjerer = kunder
             };
 
             do //Lag en unik UUID helt til det ikke finnes i databasen fra før.
@@ -207,13 +187,17 @@ namespace Flybilletter.Controllers
 
 
             //Vi må finne de orginale flygningene i databasen for å unngå exception om "Violation of PRIMARY KEY constraint"
-            /*foreach (var flygning in gjeldende.Flygninger)
+            var flygninger = new List<Flygning>();
+            flygninger.AddRange(gjeldende.Tur.Flygninger);
+            flygninger.AddRange(gjeldende.Retur.Flygninger);
+
+            foreach (var flygning in flygninger)
             {
                 var dbFlygning = db.Flygninger.Find(flygning.ID);
-                if (dbFlygning == null) return View(); //Det skjedde en feil
+                if (dbFlygning == null) throw new InvalidOperationException("Ugyldig flygning") ; //Det skjedde en feil
 
                 bestilling.Flygninger.Add(dbFlygning);
-            } */
+            } 
 
             db.Bestillinger.Add(bestilling);
 
@@ -221,7 +205,6 @@ namespace Flybilletter.Controllers
 
 
             TempData["bestilling"] = bestilling;
-
             return RedirectToAction("Kvittering");
         }
 
@@ -251,8 +234,8 @@ namespace Flybilletter.Controllers
         [HttpGet]
         public string ReferanseEksisterer(string referanse)
         {
-            string retur = "{{ \"exists\":\"{0}\", \"url\":\"{1}\" }}";
-            if (referanse == null) return string.Format(retur, false, null);
+            string returString = "{{ \"exists\":\"{0}\", \"url\":\"{1}\" }}";
+            if (referanse == null) return string.Format(returString, false, null);
 
             referanse = referanse.ToUpper().Trim();
             var regex = new Regex("^[A-Z0-9]{6}$");
@@ -267,7 +250,7 @@ namespace Flybilletter.Controllers
             }
 
 
-            return string.Format(retur, exists, url);
+            return string.Format(returString, exists, url);
         }
 
 
