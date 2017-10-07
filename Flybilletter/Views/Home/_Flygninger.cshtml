@@ -1,5 +1,27 @@
 ﻿@model List<List<Flybilletter.Models.Reise>>
 
+<script>
+    $(function () {
+        $('#valgtReise').change(function () {
+            var isTurChecked = $('input[name=turindeks]:checked', '#valgtReise').val() != null; // Hvis ikke valgt verdi = null
+            var isReturChecked = true;
+            if ($('input[name=returindeks]', '#valgtReise').length > 0) { // Hvis det finnes returreiser
+                isReturChecked = $('input[name=returindeks]:checked', '#valgtReise').val() != null;
+            }
+
+            if (isTurChecked && isReturChecked) {
+                $('#submitFlygninger').addClass("btn-success");
+                $('#submitFlygninger').prop('disabled', false);
+            }
+        });
+
+        $("tr.flygning").click(function (event) {
+            $(this).find("input").prop('checked', true);
+            $('#valgtReise').change();
+        });
+    });
+</script>
+
 @if (Model == null)
 {
     <h3>Feil. Uglydig søk-parametre</h3>
@@ -8,7 +30,7 @@ else
 {
 
     <h3>Flygninger:</h3>
-    using (Html.BeginForm("ValgtReise", "Home"))
+    using (Html.BeginForm("ValgtReise", "Home", FormMethod.Post, new { id="valgtReise"}))
     {
 
         for (var i = 0; i < Model.Count; i++)  //Maks 2 elementer. Indeks 0 for Tur, indeks 1 for retur
@@ -30,7 +52,7 @@ else
                 @for(var j = 0; j < ReiseListe.Count; j++)
                 {
                     var reise = ReiseListe[j];
-                    <tr>
+                    <tr class="flygning">
                         @{if (reise.Mellomlanding > 0)
                             {
                                 <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@i-@j" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
@@ -72,6 +94,6 @@ else
                        }
             </table>
         }
-        <button class="btn btn-primary" type="submit">Velg flygninger</button>
+        <button id="submitFlygninger" class="btn" type="submit" disabled="disabled">Velg flygninger</button>
     }
 }
