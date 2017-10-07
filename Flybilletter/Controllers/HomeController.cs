@@ -263,6 +263,21 @@ namespace Flybilletter.Controllers
             return View(bestilling);
         }
 
+        public ActionResult Avbestill(string referanse)
+        {
+            try
+            {
+                var bestilling = db.Bestillinger.First(best => best.Referanse.Equals(referanse));
+                db.Bestillinger.Remove(bestilling);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                //TODO: Håndter error.
+            }
+            return RedirectToAction("Index");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
