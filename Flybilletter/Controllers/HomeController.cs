@@ -263,6 +263,7 @@ namespace Flybilletter.Controllers
             return View(bestilling);
         }
 
+        [HttpGet]
         public ActionResult Avbestill(string referanse)
         {
             try
