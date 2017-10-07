@@ -88,27 +88,27 @@ namespace Flybilletter.Models
             var Boeing737_1 = new Fly()
             {
                 Modell = "Boeing 737",
-                Sete = new bool[25, 6]
+                AntallSeter = 150
             };
             var Boeing737_2 = new Fly()
             {
                 Modell = "Boeing 737",
-                Sete = new bool[25, 6]
+                AntallSeter = 150
             };
             var Boeing737_3 = new Fly()
             {
                 Modell = "Boeing 737",
-                Sete = new bool[25, 6]
+                AntallSeter = 150
             };
             var AirbusA380_1 = new Fly()
             {
                 Modell = "Airbus A380",
-                Sete = new bool[50, 9] //50 rader, 9 seter hver rad
+                AntallSeter = 450
             };
             var AirbusA380_2 = new Fly()
             {
                 Modell = "Airbus A380",
-                Sete = new bool[50, 9] //50 rader, 9 seter hver rad
+                AntallSeter = 450
             };
 
 
