@@ -33,8 +33,8 @@ else
                     <tr>
                         @{if (reise.Mellomlanding > 0)
                             {
-                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@reise.GetHashCode()" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
-                                    <div id="mellom-@reise.GetHashCode()" class="collapse">
+                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@j" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                                    <div id="mellom-@j" class="collapse">
                                         <table class="table col-md-1 col-sm-2">
                                             <th>Rute</th>
                                             <th>Avgang</th>
@@ -70,6 +70,6 @@ else
                        }
             </table>
         }
-                                    <button type="submit">asdasdsadas</button>
+        <button class="btn btn-primary" type="submit">Velg flygninger</button>
     }
 }
