@@ -18,7 +18,7 @@ else
             string radioButtonName = i == 0 ? "turindeks" : "returindeks";
 
             <h4>@name</h4>
-            <table class="table col-md-12 col-sm-12">
+            <table class="table table-striped col-md-12 col-sm-12">
                 <tr>
                     <th>Rute</th>
                     <th>Avgang</th>
@@ -33,8 +33,8 @@ else
                     <tr>
                         @{if (reise.Mellomlanding > 0)
                             {
-                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@j" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
-                                    <div id="mellom-@j" class="collapse">
+                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@i-@j" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                                    <div id="mellom-@i-@j" class="collapse">
                                         <table class="table col-md-1 col-sm-2">
                                             <th>Rute</th>
                                             <th>Avgang</th>
