@@ -153,6 +153,21 @@ namespace Flybilletter.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public string Kunde(List<Kunde> Kunder)
+        {
+            return "ASD";
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public string Betaling(BestillingViewModel kort)
+        {
+            return "ASD";
+        }
+
+
+        [HttpPost]
         public ActionResult BestillingDetaljer(BestillingViewModel bestillingViewModel)
         {
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
