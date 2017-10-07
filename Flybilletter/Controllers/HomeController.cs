@@ -167,18 +167,19 @@ namespace Flybilletter.Controllers
         public ActionResult GenererReferanse(BestillingViewModel kredittkortInformasjon)
         {
             //TODO: Generer referanse, lagre i database
-            var kunder = (List<Kunde>) Session["KunderBestilling"];
+            var kunder = (List<Kunde>)Session["KunderBestilling"];
 
             //Denne inneholder informasjon om Tur- og Retur-property
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
 
-            var list = new List<Flygning>();
             var bestilling = new Bestilling()
             {
                 BestillingsTidspunkt = DateTime.Now,
-                Flygninger = new List<Flygning>(),
+                FlygningerTur = new List<Flygning>(),
                 Passasjerer = kunder
             };
+
+
 
             do //Lag en unik UUID helt til det ikke finnes i databasen fra før.
             {
@@ -187,22 +188,29 @@ namespace Flybilletter.Controllers
 
 
             //Vi må finne de orginale flygningene i databasen for å unngå exception om "Violation of PRIMARY KEY constraint"
-            var flygninger = new List<Flygning>();
-            flygninger.AddRange(gjeldende.Tur.Flygninger);
-            flygninger.AddRange(gjeldende.Retur.Flygninger);
-
-            foreach (var flygning in flygninger)
+            foreach (var flygning in gjeldende.Tur.Flygninger)
             {
                 var dbFlygning = db.Flygninger.Find(flygning.ID);
-                if (dbFlygning == null) throw new InvalidOperationException("Ugyldig flygning") ; //Det skjedde en feil
+                if (dbFlygning == null) throw new InvalidOperationException("Ugyldig flygning"); //Det skjedde en feil
 
-                bestilling.Flygninger.Add(dbFlygning);
-            } 
+                bestilling.FlygningerTur.Add(dbFlygning);
+            }
+
+            if (gjeldende.Retur != null)
+            {
+                bestilling.FlygningerRetur = new List<Flygning>();
+                foreach (var flygning in gjeldende.Retur.Flygninger)
+                {
+                    var dbFlygning = db.Flygninger.Find(flygning.ID);
+                    if (dbFlygning == null) throw new InvalidOperationException("Ugyldig flygning");
+
+                    bestilling.FlygningerRetur.Add(dbFlygning);
+                }
+            }
 
             db.Bestillinger.Add(bestilling);
 
             db.SaveChanges();
-
 
             TempData["bestilling"] = bestilling;
             return RedirectToAction("Kvittering");

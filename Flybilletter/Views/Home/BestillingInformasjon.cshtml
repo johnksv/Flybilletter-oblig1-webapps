@@ -16,8 +16,8 @@
 }
 
 @{
-    var fraFlyplass = Model.Flygninger.First().Rute.Fra;
-    var tilFlyplass = @Model.Flygninger.Last().Rute.Til;
+    var fraFlyplass = Model.FlygningerTur.First().Rute.Fra;
+    var tilFlyplass = Model.FlygningerTur.Last().Rute.Til;
     var bestillingsTidspunkt = Model.BestillingsTidspunkt;
 }
 
@@ -30,15 +30,33 @@
     </div>
     <hr />
 
-    <h4>Flygninger</h4>
+    <h3>Flygninger</h3>
+    <h4>Tur</h4>
+    <div class="row">
+        @foreach (var flygning in Model.FlygningerTur)
+        {
+            <div class="col-md-6">
+                @Html.DisplayFor(model => flygning)
+            </div>
+        }
+    </div>
     
-    @for (int i = 0; i < Model.Flygninger.Count; i++)
+
+    @if (Model.FlygningerRetur != null && Model.FlygningerRetur.Count > 0)
     {
-        @Html.DisplayFor(model => model.Flygninger[i], new { htmlAttributes = new { @class = "form-control" } })
+        <h4>Retur</h4>
+        <div class="row">
+            @foreach (var item in Model.FlygningerRetur)
+            {
+                <div class="col-md-6">
+                    @Html.DisplayFor(model => item)
+                </div>
+            }
+        </div>
     }
 
 
-    <h4>Passasjerer</h4>
+    <h3>Passasjerer</h3>
     <div class="row">
         @for (int i = 0, antall = 1; i < Model.Passasjerer.Count; i++, antall++)
         {
@@ -57,7 +75,7 @@
 
     @if (bestillingsTidspunkt > DateTime.Today.AddDays(-2))
     {
-        <a href="#avbestill" id="gaaTilAvbestill" class="btn btn-danger" >Avbestill reise</a>
+        <a href="#avbestill" id="gaaTilAvbestill" class="btn btn-danger">Avbestill reise</a>
     }
 
     <div class="modal" id="avbestill" role="dialog">
