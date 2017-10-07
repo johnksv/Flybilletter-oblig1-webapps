@@ -46,11 +46,16 @@ namespace Flybilletter.Controllers
             var fra = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Fra).First(); //Hvis du tweaket i HTML-koden fortjener du ikke feilmelding
             var til = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Til).First();
 
-            List<List<Reise>> reiser = null;
+            FlygningerViewModel reiser = null;
 
             if (ModelState.IsValid && !sammeTilOgFra && fra != null && til != null)
             {
-                reiser = new List<List<Reise>>();
+                reiser = new FlygningerViewModel()
+                {
+                    TurMuligheter = new List<Reise>(),
+                    ReturMuligheter = new List<Reise>(),
+                    TurRetur = innSok.Retur.Year >= DateTime.Now.Year
+                };
                 List<Flygning> fraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(fra.ID)).ToList(); //fly som drar fra reiseplass
                 List<Flygning> tilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(til.ID)).ToList(); //fly som ender opp i destinasjon
                 List<Reise> turListe = new List<Reise>();
@@ -101,8 +106,8 @@ namespace Flybilletter.Controllers
                         }
                     }
                 }
-                reiser.Add(turListe);
-                reiser.Add(returListe);
+                reiser.TurMuligheter.AddRange(turListe.ToList());
+                reiser.ReturMuligheter.AddRange(returListe.ToList());
 
                 Session["turListe"] = turListe;
                 Session["returListe"] = returListe;
