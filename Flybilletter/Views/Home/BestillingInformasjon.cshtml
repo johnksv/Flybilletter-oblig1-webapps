@@ -1,5 +1,13 @@
 ﻿@model Flybilletter.Models.Bestilling
 
+<script>
+    $(function () {
+        $('#gaaTilAvbestill').click(function () {
+            $("#avbestill").modal();
+        });
+    });
+</script>
+
 @if (Model == null)
 {
 
@@ -10,6 +18,7 @@
 @{
     var fraFlyplass = Model.Flygninger.First().Rute.Fra;
     var tilFlyplass = @Model.Flygninger.Last().Rute.Til;
+    var bestillingsTidspunkt = Model.BestillingsTidspunkt;
 }
 
 <div>
@@ -40,4 +49,18 @@
             </div>
         </div>
     }
+    @if (bestillingsTidspunkt < DateTime.Today.AddDays(-2))
+    {
+        <a href="#avbestill" id="gaaTilAvbestill" class="btn btn-danger" >Avbestill reise</a>
+    }
+
+    <div class="modal" id="avbestill" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <h3 class="panel-body">Du er i ferd med å avbestille reisen. Er du sikker?</h3>
+                <a href="/home/avbestill?ID=@Model.Referanse" class="btn btn-danger">Avbestill reise</a>
+                <a class="btn btn-warning" data-dismiss="modal">Avbryt</a>
+            </div>
+        </div>
+    </div>
 </div>
