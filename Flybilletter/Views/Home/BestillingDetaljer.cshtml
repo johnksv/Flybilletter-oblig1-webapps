@@ -210,7 +210,8 @@
                                 </thead>
                                 @{
                                     double totalPris = 0;
-                                    var flygninger = Model.Tur.Flygninger;
+                                    var flygninger = new List<Flybilletter.Models.Flygning>();
+                                    flygninger.AddRange(Model.Tur.Flygninger);
                                     if (Model.Retur != null)
                                     {
                                         flygninger.AddRange(Model.Retur.Flygninger);
