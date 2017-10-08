@@ -168,6 +168,7 @@ namespace Flybilletter.Controllers
         {
             //TODO: Generer referanse, lagre i database
             var kunder = (List<Kunde>)Session["KunderBestilling"];
+            var dbKunder = DBKunde.leggInn(kunder);
 
             //Denne inneholder informasjon om Tur- og Retur-property
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
@@ -176,7 +177,7 @@ namespace Flybilletter.Controllers
             {
                 BestillingsTidspunkt = DateTime.Now,
                 FlygningerTur = new List<Flygning>(),
-                Passasjerer = kunder
+                Passasjerer = dbKunder
             };
 
 
@@ -259,6 +260,13 @@ namespace Flybilletter.Controllers
 
 
             return string.Format(returString, exists, url);
+        }
+
+        [HttpGet]
+        public string HentPoststed(int postnummer)
+        {
+            DBPoststed poststed = db.Poststeder.Find(postnummer);
+            return poststed.Poststed;
         }
 
 

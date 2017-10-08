@@ -36,6 +36,8 @@ namespace Flybilletter.Models
         [RegularExpression("^[0-9]{8}$", ErrorMessage = "Telefonnummer må være 8 siffer")]
         public string Tlf { get; set; }
 
+        [Required]
+        [RegularExpression("^[0-9]{4}$", ErrorMessage = "Postnummer må være 4 siffer")]
         public int Postnummer { get; set; }
 
         public string Poststed { get; set; }

@@ -51,7 +51,17 @@ namespace Flybilletter.Models
             return kunder;
         }
 
-        public static void leggInn(Kunde innKunde)
+        public static List<DBKunde> leggInn(IEnumerable<Kunde> kunder)
+        {
+            var dbKunder = new List<DBKunde>(kunder.Count());
+            foreach (var kunde in kunder)
+            {
+                dbKunder.Add(leggInn(kunde));
+            }
+            return dbKunder;
+        }
+
+            public static DBKunde leggInn(Kunde innKunde)
         {
             using (var db = new DB())
             {
@@ -67,6 +77,7 @@ namespace Flybilletter.Models
                 nyKunde.Poststed = poststed;
                 db.Kunder.Add(nyKunde);
                 db.SaveChanges();
+                return nyKunde;
             }
         }
         public static void endreKunde(Kunde innKunde)
