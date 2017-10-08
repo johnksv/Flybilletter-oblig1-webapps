@@ -31,51 +31,10 @@
 
 <h3>Flygninger:</h3>
 @using (Html.BeginForm("ValgtReise", "Home", FormMethod.Post, new { id = "valgtReise" }))
-    {
+{
     <h4>Tur</h4>
-    <table class="table table-striped col-md-12 col-sm-12">
-        <thead>
-            <tr>
-                <th>Rute</th>
-                <th>Avgang</th>
-                <th>Ankomst</th>
-                <th>Reisetid</th>
-                <th>Pris</th>
-                <th></th>
-            </tr>
-        </thead>
-        @for(var i = 0; i < Model.TurMuligheter.Count; i++)
-        {
-            var reise = Model.TurMuligheter[i];
-            <tr class="flygning">
-            @if (reise.Mellomlanding > 0) { 
-                <td>
-                    @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-tur-@i" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
-                    <div id="mellom-tur-@i" class="collapse">
-                        @Html.Partial("_Mellomlandinger", reise)
-                    </div>
-                </td>
-            }
-            else
-            {
-                <td>
-                    @reise.Fra.Navn -@reise.Til.Navn
-                </td>
-            }
-
-                <td>@reise.Avgang</td>
-                <td>@reise.Ankomst</td>
-                <td>@(reise.Ankomst - reise.Avgang)</td>
-                <td>@reise.Pris</td>
-                <td><input name="turindeks" type="radio" value="@i" /></td>
-            </tr>
-        }
-    </table>
-
-    if (Model.TurRetur)
+    if (Model.TurMuligheter.Count > 0)
     {
-        
-        <h4>Retur</h4>
         <table class="table table-striped col-md-12 col-sm-12">
             <thead>
                 <tr>
@@ -87,23 +46,24 @@
                     <th></th>
                 </tr>
             </thead>
+
             @for (var i = 0; i < Model.TurMuligheter.Count; i++)
             {
-                var reise = Model.ReturMuligheter[i];
+                var reise = Model.TurMuligheter[i];
                 <tr class="flygning">
                     @if (reise.Mellomlanding > 0)
                     {
                         <td>
-                            @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-retur-@i" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
-                            <div id="mellom-retur-@i" class="collapse">
-                               @Html.Partial("_Mellomlandinger", reise)
+                            @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-tur-@i" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                            <div id="mellom-tur-@i" class="collapse">
+                                @Html.Partial("_Mellomlandinger", reise)
                             </div>
                         </td>
                     }
                     else
                     {
                         <td>
-                            @reise.Fra.Navn -@reise.Til.Navn
+                            @reise.Fra.Navn - @reise.Til.Navn
                         </td>
                     }
 
@@ -111,14 +71,71 @@
                     <td>@reise.Ankomst</td>
                     <td>@(reise.Ankomst - reise.Avgang)</td>
                     <td>@reise.Pris</td>
-                    <td><input name="returindeks" type="radio" value="@i" /></td>
+                    <td><input name="turindeks" type="radio" value="@i" /></td>
                 </tr>
+
             }
         </table>
+    }
+    else
+    {
+        <p>Vi fant ingen flygninger for denne tiden.</p>
+    }
+    if (Model.TurRetur)
+    {
+
+            <h4>Retur</h4>
+        if (Model.ReturMuligheter.Count > 0)
+        {
+            <table class="table table-striped col-md-12 col-sm-12">
+                <thead>
+                    <tr>
+                        <th>Rute</th>
+                        <th>Avgang</th>
+                        <th>Ankomst</th>
+                        <th>Reisetid</th>
+                        <th>Pris</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                @for (var i = 0; i < Model.ReturMuligheter.Count; i++)
+                {
+                    var reise = Model.ReturMuligheter[i];
+                    <tr class="flygning">
+                        @if (reise.Mellomlanding > 0)
+                        {
+                            <td>
+                                @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-retur-@i" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                                <div id="mellom-retur-@i" class="collapse">
+                                    @Html.Partial("_Mellomlandinger", reise)
+                                </div>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @reise.Fra.Navn - @reise.Til.Navn
+                            </td>
+                        }
+
+                        <td>@reise.Avgang</td>
+                        <td>@reise.Ankomst</td>
+                        <td>@(reise.Ankomst - reise.Avgang)</td>
+                        <td>@reise.Pris</td>
+                        <td><input name="returindeks" type="radio" value="@i" /></td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <p>Vi fant ingen flygninger for denne tiden.</p>
+        }
+
     }
 
 
 
-
-    <button id="submitFlygninger" class="btn" type="submit" disabled="disabled">Velg flygninger</button>
+        <button id="submitFlygninger" class="btn" type="submit" disabled="disabled">Velg flygninger</button>
+    
 }
