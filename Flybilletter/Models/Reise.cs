@@ -7,7 +7,7 @@ namespace Flybilletter.Models
 {
     public class Reise
     {
-        public List<Flygning> Flygninger { get; set; }
+        public IEnumerable<Flygning> Flygninger { get; set; }
         public int Mellomlanding { get; set; }
         public Flyplass Fra { get; set; }
         public Flyplass Til { get; set; }
@@ -17,8 +17,9 @@ namespace Flybilletter.Models
 
         public Reise(Flygning utenMellomLanding)
         {
-            Flygninger = new List<Flygning>();
-            Flygninger.Add(utenMellomLanding);
+            Flygninger = new List<Flygning>() {
+                utenMellomLanding
+            };
             this.Fra = utenMellomLanding.Rute.Fra;
             this.Til = utenMellomLanding.Rute.Til;
             this.Pris = utenMellomLanding.Rute.BasePris;

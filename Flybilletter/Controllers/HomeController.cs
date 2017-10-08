@@ -295,22 +295,6 @@ namespace Flybilletter.Controllers
             return View(bestilling);
         }
 
-        [HttpGet]
-        public ActionResult Avbestill(string referanse)
-        {
-            try
-            {
-                var bestilling = db.Bestillinger.First(best => best.Referanse.Equals(referanse));
-                db.Bestillinger.Remove(bestilling);
-                db.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                //TODO: Håndter error.
-            }
-            return RedirectToAction("Index");
-        }
-
         private bool VerifiserKredittkort(string CVCstring, string utlop)
         {
             

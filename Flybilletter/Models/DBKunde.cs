@@ -82,9 +82,20 @@ namespace Flybilletter.Models
                 };
 
                 var poststed = db.Poststeder.Find(innKunde.Postnummer);
+                if(poststed == null) //Antar at posten har byttet postnummer på denne plassen
+                {
+                    poststed = new DBPoststed()
+                    {
+                        Postnr= innKunde.Postnummer,
+                        Poststed = ""
+                    };
+                    
+                }else
+                {
+                    db.Poststeder.Attach(poststed);
+                }
 
-
-                db.Poststeder.Attach(poststed);
+                
                 nyKunde.Poststed = poststed;
                 
                 db.Kunder.Add(nyKunde);
