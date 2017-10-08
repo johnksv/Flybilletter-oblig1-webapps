@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Flybilletter.Models
 {
-    public class DBInit : DropCreateDatabaseIfModelChanges<DB>
+    public class DBInit : DropCreateDatabaseAlways<DB>
     {
         protected override void Seed(DB context)
         {
