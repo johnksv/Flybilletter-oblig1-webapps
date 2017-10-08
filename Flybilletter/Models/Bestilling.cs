@@ -13,6 +13,7 @@ namespace Flybilletter.Models
         public virtual List<Flygning> FlygningerTur { get; set; }
         public virtual List<Flygning> FlygningerRetur { get; set; }
         public DateTime BestillingsTidspunkt { get; set; }
+        public double Totalpris { get; set; }
 
     }
 }

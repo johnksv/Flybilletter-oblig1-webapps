@@ -183,7 +183,8 @@ namespace Flybilletter.Controllers
             {
                 BestillingsTidspunkt = DateTime.Now,
                 FlygningerTur = new List<Flygning>(),
-                Passasjerer = dbKunder
+                Passasjerer = dbKunder,
+                Totalpris = gjeldende.Totalpris
             };
 
 

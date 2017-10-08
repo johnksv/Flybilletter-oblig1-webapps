@@ -17,5 +17,18 @@ namespace Flybilletter.Models
 
         [Required]
         public List<Kunde> Kunder { get; set; }
+
+        public double Totalpris
+        {
+            get
+            {
+                double pris = 0;
+                if (Tur != null) pris += Tur.Pris;
+                if (Retur != null) pris += Retur.Pris;
+                return pris;
+            }
+
+            private set { }
+        }
     }
 }
