@@ -73,6 +73,11 @@
         $("#turdato").change(function () {
             $("#returdato").val($("#turdato").val());
         });
+
+        $("#sokForm").submit(function (event) {
+            event.preventDefault();
+            $("#sokForm").change();
+        });
     });
 </script>
 <h2>Bestill flybilletter</h2>
