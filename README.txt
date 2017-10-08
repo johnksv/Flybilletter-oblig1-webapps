@@ -1,4 +1,4 @@
-"LuftKlar" er en webapplikasjon for å bestille flybilletter.
+﻿"LuftKlar" er en webapplikasjon for å bestille flybilletter.
 Rammeverk vi har benyttet oss av:
     - EntityFramework v6.1.3 Code First (Microsoft)
     - jQuery v3.2.1 (jQuery Foundation)
