@@ -188,12 +188,11 @@
 
                             </div>
                         }
-                        <p>Grunnet personvern oppbevarer vi ingen kortdetaljer. De blir kun brukt for å gjennomføre kjøpet.</p>
+                        <p>Vi gjør oppmerksom på at kortinformasjon blir ikke lagret, men den blir "validert". Selv om denne siden kun emulerer at vi belaster kortet, vil vi anbefale å IKKE oppgi reell kortdata.</p>
                     </div>
 
                     <div class="col-md-6">
                         <p>BETALINGSINFORMASJON</p>
-
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -202,18 +201,25 @@
                                         <th>Pris</th>
                                     </tr>
                                 </thead>
-                                <tr>
-                                    <td>
-                                        Flybiletter
-                                    </td>
-                                    <td>1049,-</td>
-
+                                @{
+                                    double totalPris = 0;
+                                    var flygninger = Model.Tur.Flygninger;
+                                    flygninger.AddRange(Model.Retur.Flygninger);
+                                    foreach (var flygning in flygninger)
+                                    {
+                                        <tr>
+                                            <td>@flygning.Rute.Fra.By - @flygning.Rute.Til.By</td>
+                                            <td>@flygning.Rute.BasePris,-</td>
+                                        </tr>
+                                        totalPris += flygning.Rute.BasePris;
+                                    }
+                                }
+                                <tr class="info">
+                                    <th>Totalbeløp:</th>
+                                    <th>@totalPris,-</th>
                                 </tr>
                             </table>
                         </div>
-
-                        <p>Totalbeløp:</p>
-
                     </div>
 
                 </div>
