@@ -1,13 +1,5 @@
 ﻿@model Flybilletter.Models.Bestilling
 
-<script>
-    $(function () {
-        $('#gaaTilAvbestill').click(function () {
-            $("#avbestill").modal();
-        });
-    });
-</script>
-
 @if (Model == null)
 {
 
@@ -76,10 +68,4 @@
             </div>
         }
     </div>
-
-    @if (bestillingsTidspunkt > DateTime.Today.AddDays(-2))
-    {
-        <a href="#avbestill" id="gaaTilAvbestill" class="btn btn-danger">Avbestill reise</a>
-    }
-
 </div>

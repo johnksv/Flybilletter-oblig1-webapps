@@ -284,7 +284,7 @@ namespace Flybilletter.Controllers
 
         public ActionResult ReferanseSammendrag(string referanse)
         {
-            var bestilling = db.Bestillinger.First(best => best.Referanse.Equals(referanse))
+            var bestilling = db.Bestillinger.First(best => best.Referanse.Equals(referanse));
 
             return View(bestilling);
         }
