@@ -29,11 +29,11 @@ namespace Flybilletter.Models
         public DateTime Fodselsdag { get; set; }
 
         [Required]
-        [RegularExpression("^[A-Za-z0-9æøåÆØÅ ]+$", ErrorMessage = "Adresse kan kun være bokstaver og tall")]
+        [RegularExpression("^[A-Za-z0-9æøåÆØÅ,. ]+$", ErrorMessage = "Adresse kan kun være bokstaver og tall")]
         public string Adresse { get; set; }
 
         [Required]
-        [RegularExpression("^[0-9]{8}$", ErrorMessage = "Telefonnummer må være 8 siffer")]
+        [RegularExpression(@"^(?:\+[0-9]{10}|[0-9]{8})$", ErrorMessage = "Telefonnummer må være 8 siffer")]
         public string Tlf { get; set; }
 
         public List<Bestilling> Bestillinger { get; set; }
