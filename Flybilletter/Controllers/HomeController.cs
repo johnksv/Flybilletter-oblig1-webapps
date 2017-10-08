@@ -30,8 +30,6 @@ namespace Flybilletter.Controllers
         [HttpPost]
         public ActionResult Sok(Flybilletter.Models.SokViewModel innSok)
         {
-            //TODO: Slå sammen mellomlanding (vise Bodø-Malpensa), Endre reisetid + pris, Radiobutton på kun én
-
             bool sammeTilOgFra = innSok.Til.Equals(innSok.Fra);
             var fra = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Fra).First(); //Hvis du tweaket i HTML-koden fortjener du ikke feilmelding
             var til = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Til).First();
@@ -71,7 +69,6 @@ namespace Flybilletter.Controllers
                     }
                 }
 
-
                 List<Flygning> returFraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(til.ID)).ToList();
                 List<Flygning> returTilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(fra.ID)).ToList();
 
@@ -86,7 +83,6 @@ namespace Flybilletter.Controllers
                     {
                         foreach (Flygning tilFly in returTilListe)
                         {
-                            //TODO: Ta høyde for tid
                             if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Retur.Date &&
                                 (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
                             {
@@ -171,7 +167,7 @@ namespace Flybilletter.Controllers
                 if(!gyldig) return View("BetalingFeilet");
             }
 
-            //TODO: Generer referanse, lagre i database
+            // Generer referanse, lagre i database
             var kunder = (List<Kunde>)Session["KunderBestilling"];
             var dbKunder = DBKunde.LeggInn(kunder);
 
@@ -288,9 +284,7 @@ namespace Flybilletter.Controllers
 
         public ActionResult ReferanseSammendrag(string referanse)
         {
-            var bestilling = db.Bestillinger.First(best => best.Referanse.Equals(referanse));
-
-            //TODO: Hvis bestilling er null, altså at referansen ikke finnes i databasen.
+            var bestilling = db.Bestillinger.First(best => best.Referanse.Equals(referanse))
 
             return View(bestilling);
         }
