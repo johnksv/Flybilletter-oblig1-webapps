@@ -56,9 +56,9 @@ namespace Flybilletter.Controllers
                     ReturMuligheter = new List<Reise>(),
                     TurRetur = innSok.Retur.Year >= DateTime.Now.Year
                 };
-                List<Flygning> fraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(fra.ID)).ToList(); //fly som drar fra reiseplass
-                List<Flygning> tilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(til.ID)).ToList(); //fly som ender opp i destinasjon
-                List<Reise> turListe = new List<Reise>();
+                List<Flygning> fraListe = db.Flygninger.Include("Fly").Where(flygning => flygning.Rute.Fra.ID.Equals(fra.ID)).ToList(); //fly som drar fra reiseplass
+                List<Flygning> tilListe = db.Flygninger.Include("Fly").Where(flygning => flygning.Rute.Til.ID.Equals(til.ID)).ToList(); //fly som ender opp i destinasjon
+                List <Reise> turListe = new List<Reise>();
                 List<Reise> returListe = new List<Reise>();
                 foreach (Flygning fraFly in fraListe)
                 {
@@ -151,7 +151,6 @@ namespace Flybilletter.Controllers
             };
 
             if (returIndeksInt >= 0) bestillingsdata.Retur = returListe[returIndeksInt];
-
 
             Session["GjeldendeBestilling"] = bestillingsdata;
             return View("BestillingDetaljer", bestillingsdata);

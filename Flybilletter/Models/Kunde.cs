@@ -16,11 +16,11 @@ namespace Flybilletter.Models
         public int ID { get; set; }
 
         [Required]
-        [RegularExpression("^[A-Za-zæøåÆØÅ ]+$", ErrorMessage = "Fornavn kan kun være bokstaver")]
+        [RegularExpression(@"^[A-Za-zæøåÆØÅ\- ]+$", ErrorMessage = "Fornavn kan kun være bokstaver")]
         public string Fornavn { get; set; }
 
         [Required]
-        [RegularExpression("^[A-Za-zæøåÆØÅ ]+$", ErrorMessage = "Etternavn kan kun være bokstaver")]
+        [RegularExpression(@"^[A-Za-zæøåÆØÅ\- ]+$", ErrorMessage = "Etternavn kan kun være bokstaver")]
         public string Etternavn { get; set; }
 
         [Required]

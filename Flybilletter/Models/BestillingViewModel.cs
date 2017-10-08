@@ -15,7 +15,6 @@ namespace Flybilletter.Models
 
         public KredittkortViewModel Kredittkort { get; set; }
 
-        [Required]
         public List<Kunde> Kunder { get; set; }
 
         public double Totalpris

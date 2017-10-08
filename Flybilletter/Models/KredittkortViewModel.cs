@@ -10,12 +10,12 @@ namespace Flybilletter.Models
     {
 
         [Required]
-        [RegularExpression("^[A-Za-zæøåÆØÅöÖäÄëË ]+$", ErrorMessage = "Feltet inneholder ugyldige bokstaver")]
+        [RegularExpression(@"^[A-Za-zæøåÆØÅöÖäÄëË\- ]+$", ErrorMessage = "Feltet inneholder ugyldige bokstaver")]
         public string Kortholder { get; set; }
 
         [Required]
         [RegularExpression("^[0-9]{16}$", ErrorMessage = "Ugyldig kortnummer. Må være 16 tall.")]
-        public int Kortnummer { get; set; }
+        public long Kortnummer { get; set; }
 
         [Required]
         [RegularExpression("^[0-9]{3}$", ErrorMessage = "Ugyldig cvc. Må være 3 tall.")]
