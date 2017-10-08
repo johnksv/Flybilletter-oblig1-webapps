@@ -13,16 +13,6 @@ namespace Flybilletter.Controllers
 
         private DB db = new DB();
 
-        public ActionResult Index()
-        {
-            //FOR DEBUGGING. TODO: REMOVE
-            var referanser = db.Bestillinger.Select(best => best.Referanse).ToArray();
-            ViewBag.referanser = referanser;
-
-
-            return View();
-        }
-
         public ActionResult Sok()
         {
             ViewBag.flyplasser = db.Flyplasser.ToList();
