@@ -26,7 +26,7 @@ namespace Flybilletter.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Retur { get; set; }
 
-        [Range (1, 100)]
+        [Range (1, 200)]
         [Display(Name = "Antall Billetter")]
         public int AntallBilletter { get; set; }
 

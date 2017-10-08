@@ -62,17 +62,32 @@ namespace Flybilletter.Controllers
                 List<Reise> returListe = new List<Reise>();
                 foreach (Flygning fraFly in fraListe)
                 {
+                    // Regn ut antall passasjerer på flygning
+                    var antallPasasjerFra = innSok.AntallBilletter;
+                    foreach (var bestFra in fraFly.Bestillinger)
+                    {
+                        antallPasasjerFra += bestFra.Passasjerer.Count();
+                    }
+
                     if (fraFly.Rute.Til == til)
                     {
-                        if (fraFly.AvgangsTid.Date == innSok.Avreise.Date)
+                        if (fraFly.AvgangsTid.Date == innSok.Avreise.Date && antallPasasjerFra <= fraFly.Fly.AntallSeter)
                             turListe.Add(new Reise(fraFly));
                     }
                     else
                     {
                         foreach (Flygning tilFly in tilListe)
                         {
+                            // Regn ut antall passasjerer på flygning
+                            var antallPasasjererTil = innSok.AntallBilletter;
+                            foreach (var bestTil in tilFly.Bestillinger)
+                            {
+                                antallPasasjererTil += bestTil.Passasjerer.Count();
+                            }
+
                             if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Avreise.Date &&
-                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
+                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0) &&
+                                antallPasasjerFra < fraFly.Fly.AntallSeter && antallPasasjererTil <= tilFly.Fly.AntallSeter)
                             {
                                 turListe.Add(new Reise(fraFly, tilFly));
                                 break;
