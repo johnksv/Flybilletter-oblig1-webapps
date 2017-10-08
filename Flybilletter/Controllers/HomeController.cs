@@ -156,7 +156,6 @@ namespace Flybilletter.Controllers
             return View("BestillingDetaljer", bestillingsdata);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public string Kunde(List<Kunde> Kunder)
@@ -171,6 +170,17 @@ namespace Flybilletter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult GenererReferanse(BestillingViewModel kredittkortInformasjon)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("BetalingFeilet");
+            } else
+            {
+                string CVCstring = ModelState["Kredittkort.CVC"].Value.AttemptedValue;
+                string utlop = ModelState["Kredittkort.Utlop"].Value.AttemptedValue;
+                bool gyldig = VerifiserKredittkort(CVCstring, utlop);
+                if(!gyldig) return View("BetalingFeilet");
+            }
+
             //TODO: Generer referanse, lagre i database
             var kunder = (List<Kunde>)Session["KunderBestilling"];
             var dbKunder = DBKunde.LeggInn(kunder);
@@ -309,6 +319,42 @@ namespace Flybilletter.Controllers
                 //TODO: Håndter error.
             }
             return RedirectToAction("Index");
+        }
+
+        private bool VerifiserKredittkort(string CVCstring, string utlop)
+        {
+            
+            int cvc = 0;
+            bool ok = int.TryParse(CVCstring, out cvc);
+            if (!ok || cvc < 100 || cvc > 999) return false;
+
+            
+            var regex = new Regex(@"^([0-9]{2})\-([0-9]{2})$");
+            Match match = regex.Match(utlop);
+            bool resultat = false;
+            if (match.Success)
+            {
+                int mnd = int.Parse(match.Groups[1].Value);
+                int aar = int.Parse(match.Groups[2].Value);
+
+                if (mnd > 0 && mnd <= 12) //Sjekk at mnd er OK
+                {
+                    resultat = true;
+                    if (aar < DateTime.Now.Year - 2000) //Sjekk at vi ikke er i fortiden
+                    {
+                        resultat = false;
+                    }
+                    else if (aar == DateTime.Now.Year - 2000) //Om kortet går ut samme år som nå sjekker vi at mnd er OK
+                    {
+                        int currmnd = DateTime.Now.Month;
+                        if (mnd < currmnd) 
+                        {
+                            resultat = false;
+                        }
+                    }
+                }
+            }
+            return resultat;
         }
 
         protected override void Dispose(bool disposing)

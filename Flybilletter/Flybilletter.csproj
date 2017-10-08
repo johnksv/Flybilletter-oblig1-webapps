@@ -171,6 +171,7 @@
     <Content Include="Views\Shared\EditorTemplates\KredittkortViewModel.cshtml" />
     <Content Include="Views\Home\_Flygninger.cshtml" />
     <Content Include="Views\Home\_Mellomlandinger.cshtml" />
+    <Content Include="Views\Home\BetalingFeilet.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
