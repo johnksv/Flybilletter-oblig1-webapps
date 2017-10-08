@@ -20,7 +20,8 @@
         Fødselsdag
     </dt>
     <dd>
-        @Html.DisplayFor(model => model.Fodselsdag)
+        @{var dato = Model.Fodselsdag.ToShortDateString(); }
+        @Html.DisplayFor(model => dato)
     </dd>
 
     <dt>
