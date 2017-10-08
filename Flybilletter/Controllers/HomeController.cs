@@ -113,14 +113,14 @@ namespace Flybilletter.Controllers
 
             var turListe = (List<Reise>)Session["turListe"];
             var returListe = (List<Reise>)Session["returListe"];
-            if (turListe == null || returListe == null) return RedirectToAction("Index");
+            if (turListe == null || returListe == null) return RedirectToAction("Sok");
 
             int turIndeksInt = int.Parse(turIndeks);
             int returIndeksInt = -1;
             if (returIndeks != null) returIndeksInt = int.Parse(returIndeks);
 
-            if (turIndeksInt < 0 || turIndeksInt >= turListe.Count) return RedirectToAction("Index");
-            if (returIndeksInt < -1 || returIndeksInt >= returListe.Count) return RedirectToAction("Index");
+            if (turIndeksInt < 0 || turIndeksInt >= turListe.Count) return RedirectToAction("Sok");
+            if (returIndeksInt < -1 || returIndeksInt >= returListe.Count) return RedirectToAction("Sok");
 
 
             int antallBilletter = (int)Session["antallbilletter"];
@@ -163,8 +163,13 @@ namespace Flybilletter.Controllers
             {
                 string CVCstring = ModelState["Kredittkort.CVC"].Value.AttemptedValue;
                 string utlop = ModelState["Kredittkort.Utlop"].Value.AttemptedValue;
-                bool gyldig = VerifiserKredittkort(CVCstring, utlop);
-                if(!gyldig) return View("BetalingFeilet");
+                string feilmelding;
+                bool gyldig = VerifiserKredittkort(CVCstring, utlop, out feilmelding);
+                if (!gyldig)
+                {
+                    ViewBag.Feilmelding = feilmelding;
+                    return View("BetalingFeilet");
+                }
             }
 
             // Generer referanse, lagre i database
@@ -289,12 +294,16 @@ namespace Flybilletter.Controllers
             return View(bestilling);
         }
 
-        private bool VerifiserKredittkort(string CVCstring, string utlop)
+        private bool VerifiserKredittkort(string CVCstring, string utlop, out string feilmelding)
         {
-            
+            feilmelding = "";
             int cvc = 0;
             bool ok = int.TryParse(CVCstring, out cvc);
-            if (!ok || cvc < 100 || cvc > 999) return false;
+            if (!ok || cvc < 100 || cvc > 999)
+            {
+                feilmelding = "Ugyldig CVC. Må være mellom 100 og 999";
+                return false;
+            }
 
             
             var regex = new Regex(@"^([0-9]{2})\-([0-9]{2})$");
@@ -310,6 +319,7 @@ namespace Flybilletter.Controllers
                     resultat = true;
                     if (aar < DateTime.Now.Year - 2000) //Sjekk at vi ikke er i fortiden
                     {
+                        feilmelding = "Ugyldig utløp. Kortet kan ikke være utløpt.";
                         resultat = false;
                     }
                     else if (aar == DateTime.Now.Year - 2000) //Om kortet går ut samme år som nå sjekker vi at mnd er OK
@@ -317,11 +327,13 @@ namespace Flybilletter.Controllers
                         int currmnd = DateTime.Now.Month;
                         if (mnd < currmnd) 
                         {
+                            feilmelding = "Ugyldig utløp. Kortet kan ikke være utløpt.";
                             resultat = false;
                         }
                     }
                 }
             }
+            
             return resultat;
         }
 
