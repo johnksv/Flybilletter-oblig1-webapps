@@ -7,7 +7,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Fornavn, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Fornavn, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Fornavn, new { htmlAttributes = new { @class = "form-control", autocomplete = "given-name" } })
             @Html.ValidationMessageFor(model => model.Fornavn, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -15,7 +15,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Etternavn, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Etternavn, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Etternavn, new { htmlAttributes = new { @class = "form-control", autocomplete = "family-name" } })
             @Html.ValidationMessageFor(model => model.Etternavn, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -23,7 +23,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Fodselsdag, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Fodselsdag, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Fodselsdag, new { htmlAttributes = new { @class = "form-control", autocomplete = "bday" } })
             @Html.ValidationMessageFor(model => model.Fodselsdag, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -31,7 +31,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Adresse, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Adresse, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Adresse, new { htmlAttributes = new { @class = "form-control", autocomplete = "street-address" } })
             @Html.ValidationMessageFor(model => model.Adresse, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -39,7 +39,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Tlf, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Tlf, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Tlf, new { htmlAttributes = new { @class = "form-control", autocomplete = "tel" } })
             @Html.ValidationMessageFor(model => model.Tlf, "", new { @class = "text-danger" })
         </div>
     </div>

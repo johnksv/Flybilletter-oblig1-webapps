@@ -1,4 +1,26 @@
-﻿@model List<Flybilletter.Models.Flygning>
+﻿@model List<List<Flybilletter.Models.Reise>>
+
+<script>
+    $(function () {
+        $('#valgtReise').change(function () {
+            var isTurChecked = $('input[name=turindeks]:checked', '#valgtReise').val() != null; // Hvis ikke valgt verdi = null
+            var isReturChecked = true;
+            if ($('input[name=returindeks]', '#valgtReise').length > 0) { // Hvis det finnes returreiser
+                isReturChecked = $('input[name=returindeks]:checked', '#valgtReise').val() != null;
+            }
+
+            if (isTurChecked && isReturChecked) {
+                $('#submitFlygninger').addClass("btn-success");
+                $('#submitFlygninger').prop('disabled', false);
+            }
+        });
+
+        $("tr.flygning").click(function (event) {
+            $(this).find("input").prop('checked', true);
+            $('#valgtReise').change();
+        });
+    });
+</script>
 
 @if (Model == null)
 {
@@ -8,10 +30,70 @@ else
 {
 
     <h3>Flygninger:</h3>
-    <ul>
-        @foreach(var flygning in Model)
+    using (Html.BeginForm("ValgtReise", "Home", FormMethod.Post, new { id="valgtReise"}))
+    {
+
+        for (var i = 0; i < Model.Count; i++)  //Maks 2 elementer. Indeks 0 for Tur, indeks 1 for retur
         {
-            <li>@flygning.Rute.Fra.Navn - @flygning.Rute.Til.Navn - @flygning.AvgangsTid</li>
+            var ReiseListe = Model[i];
+            string name = i == 0 ? "Tur" : "Retur";
+            string radioButtonName = i == 0 ? "turindeks" : "returindeks";
+
+            <h4>@name</h4>
+            <table class="table table-striped col-md-12 col-sm-12">
+                <thead>
+                    <th>Rute</th>
+                    <th>Avgang</th>
+                    <th>Ankomst</th>
+                    <th>Reisetid</th>
+                    <th>Pris</th>
+                    <th></th>
+                </thead>
+                @for(var j = 0; j < ReiseListe.Count; j++)
+                {
+                    var reise = ReiseListe[j];
+                    <tr class="flygning">
+                        @{if (reise.Mellomlanding > 0)
+                            {
+                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@i-@j" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                                    <div id="mellom-@i-@j" class="collapse">
+                                        <table class="table col-md-1 col-sm-2">
+                                            <thead>
+                                                <th>Rute</th>
+                                                <th>Avgang</th>
+                                                <th>Ankomst</th>
+                                                <th>Reisetid</th>
+                                                <th>Pris</th>
+                                            </thead>
+                                            @foreach (var flygning in reise.Flygninger)
+                                            {
+                                                <tr>
+                                                    <td>@flygning.Rute.Fra.Navn - @flygning.Rute.Til.Navn</td>
+                                                    <td>@flygning.AvgangsTid</td>
+                                                    <td>@flygning.AnkomstTid</td>
+                                                    <td>@(flygning.AnkomstTid - flygning.AvgangsTid)</td>
+                                                    <td>@flygning.Rute.BasePris</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>@reise.Fra.Navn - @reise.Til.Navn</td>
+                            }
+                        }
+
+                        <td>@reise.Avgang</td>
+                        <td>@reise.Ankomst</td>
+                        <td>@(reise.Ankomst - reise.Avgang)</td>
+                        <td>@reise.Pris</td>
+                        <td><input name="@radioButtonName" type="radio" value="@j" /></td>
+                    </tr>
+                       }
+            </table>
         }
-    </ul>
+        <button id="submitFlygninger" class="btn" type="submit" disabled="disabled">Velg flygninger</button>
+    }
 }

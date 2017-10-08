@@ -40,128 +40,179 @@ namespace Flybilletter.Controllers
         [HttpPost]
         public ActionResult Sok(Flybilletter.Models.SokViewModel innSok)
         {
-            //TODO: Mulig vi må gjøre om på denne; Er dette når man har valgt flygning og trykker "Neste"?
+            //TODO: Slå sammen mellomlanding (vise Bodø-Malpensa), Endre reisetid + pris, Radiobutton på kun én
 
             bool sammeTilOgFra = innSok.Til.Equals(innSok.Fra);
             var fra = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Fra).First(); //Hvis du tweaket i HTML-koden fortjener du ikke feilmelding
             var til = db.Flyplasser.Where(flyplass => flyplass.ID == innSok.Til).First();
 
-            List<Flygning> flygninger = null;
+            List<List<Reise>> reiser = null;
 
             if (ModelState.IsValid && !sammeTilOgFra && fra != null && til != null)
             {
-                flygninger = new List<Flygning>();
-                List<Flygning> fraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(fra.ID)).ToList();
-                List<Flygning> tilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(til.ID)).ToList();
-
-                foreach (Flygning flygning in fraListe)
+                reiser = new List<List<Reise>>();
+                List<Flygning> fraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(fra.ID)).ToList(); //fly som drar fra reiseplass
+                List<Flygning> tilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(til.ID)).ToList(); //fly som ender opp i destinasjon
+                List<Reise> turListe = new List<Reise>();
+                List<Reise> returListe = new List<Reise>();
+                foreach (Flygning fraFly in fraListe)
                 {
-                    if (flygning.Rute.Til == til && flygning.AvgangsTid.Date == innSok.Avreise.Date)
-                        flygninger.Add(flygning);
+                    if (fraFly.Rute.Til == til)
+                    {
+                        if (fraFly.AvgangsTid.Date == innSok.Avreise.Date)
+                            turListe.Add(new Reise(fraFly));
+                    }
+                    else
+                    {
+                        foreach (Flygning tilFly in tilListe)
+                        {
+                            if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Avreise.Date &&
+                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
+                            {
+                                turListe.Add(new Reise(fraFly, tilFly));
+                                break;
+                            }
+                        }
+                    }
                 }
 
 
                 List<Flygning> returFraListe = db.Flygninger.Where(flygning => flygning.Rute.Fra.ID.Equals(til.ID)).ToList();
                 List<Flygning> returTilListe = db.Flygninger.Where(flygning => flygning.Rute.Til.ID.Equals(fra.ID)).ToList();
 
-                foreach (Flygning flygning in returFraListe)
+                foreach (Flygning fraFly in returFraListe)
                 {
-                    if (flygning.Rute.Til == fra)
+                    if (fraFly.Rute.Til == fra)
                     {
-
-                        if (flygning.AvgangsTid.Date == innSok.Retur.Date)
-                            flygninger.Add(flygning);
+                        if (fraFly.AvgangsTid.Date == innSok.Retur.Date)
+                            returListe.Add(new Reise(fraFly));
                     }
                     else
                     {
-                        // Hvis det går flere flygninger til flere enn en flyplass
+                        foreach (Flygning tilFly in returTilListe)
+                        {
+                            //TODO: Ta høyde for tid
+                            if (fraFly.Rute.Til == tilFly.Rute.Fra && fraFly.AvgangsTid.Date == innSok.Retur.Date &&
+                                (tilFly.AvgangsTid - fraFly.AnkomstTid) >= new TimeSpan(1, 0, 0))
+                            {
+                                returListe.Add(new Reise(fraFly, tilFly));
+                                break;
+                            }
+                        }
                     }
                 }
+                reiser.Add(turListe);
+                reiser.Add(returListe);
+
+                Session["turListe"] = turListe;
+                Session["returListe"] = returListe;
+                Session["antallbilletter"] = innSok.AntallBilletter;
+
             }
 
             ViewBag.flyplasser = db.Flyplasser.ToList();
-            return PartialView("_Flygninger", flygninger);
+            return PartialView("_Flygninger", reiser);
         }
 
 
-        public ActionResult BestillingDetaljer()
+
+        [HttpPost]
+        public ActionResult ValgtReise(string turIndeks, string returIndeks)
         {
 
-            var fly = db.Flygninger.Include("Fly").Where(f => f.AvgangsTid > DateTime.Now).First();
-            var kunder = new List<Kunde>() { new Kunde() };
+            var turListe = (List<Reise>)Session["turListe"];
+            var returListe = (List<Reise>)Session["returListe"];
 
-            var model = new BestillingViewModel()
+            int turIndeksInt = int.Parse(turIndeks);
+            int returIndeksInt = -1;
+            if (returIndeks != null) returIndeksInt = int.Parse(returIndeks);
+
+            if (turIndeksInt < 0 || turIndeksInt >= turListe.Count) RedirectToAction("Index");
+            if (returIndeksInt < -1 || returIndeksInt >= returListe.Count) RedirectToAction("Index");
+
+
+            int antallBilletter = (int)Session["antallbilletter"];
+            var kunde = new List<Kunde>();
+            for (var i = 0; i < antallBilletter; i++)
             {
-                Flygninger = new List<Flygning>() { fly },
-                Fra = fly.Rute.Fra.By,
-                Til = fly.Rute.Til.By,
-                Kunder = kunder
+                kunde.Add(new Kunde());
+            }
 
+            var bestillingsdata = new BestillingViewModel()
+            {
+                Tur = turListe[turIndeksInt],
+                Kunder = kunde
             };
-            //Lagrer gjeldende bestilling i session slik at vi har denne tilgjengelig vet eventuelle feilmeldinger og endringer.
-            Session["GjeldendeBestilling"] = model;
 
-            return View(model);
+            if (returIndeksInt >= 0) bestillingsdata.Retur = returListe[returIndeksInt];
+
+
+            Session["GjeldendeBestilling"] = bestillingsdata;
+            return View("BestillingDetaljer", bestillingsdata);
         }
 
 
         [HttpPost]
-        public ActionResult BestillingDetaljer(BestillingViewModel bestillingViewModel)
-        {
-            var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
-            if (ModelState.IsValid)
-            {
-
-                //Siden gjeldene referer til det samme som Session["GjeldendeBestilling"] slipper vi å gjøre noe mer
-                gjeldende.Kunder = bestillingViewModel.Kunder;
-                return RedirectToAction("BestillingOppsummering");
-            }
-
-            return View(gjeldende);
-        }
-
-        public ActionResult BestillingOppsummering()
-        {
-            var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
-            return View(gjeldende);
-        }
-
         [ValidateAntiForgeryToken]
-        public ActionResult GenererReferanse()
+        public string Kunde(List<Kunde> Kunder)
+        {
+            //Hadde vi tatt høyde for kundehåndtering (som er oblig 2) hadde vi håndtert om kunden allerede eksisterte i databasen.
+            //Ved kall på denne metoden vet vi at det umidelbart kommer et kall til generer referanse
+            Session["KunderBestilling"] = Kunder;
+            return "Success";
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GenererReferanse(BestillingViewModel kredittkortInformasjon)
         {
             //TODO: Generer referanse, lagre i database
+            var kunder = (List<Kunde>)Session["KunderBestilling"];
+
+            //Denne inneholder informasjon om Tur- og Retur-property
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
 
-            var list = new List<Flygning>();
             var bestilling = new Bestilling()
             {
                 BestillingsTidspunkt = DateTime.Now,
-                Flygninger = new List<Flygning>(),
-                Passasjerer = gjeldende.Kunder
+                FlygningerTur = new List<Flygning>(),
+                Passasjerer = kunder
             };
+
+
 
             do //Lag en unik UUID helt til det ikke finnes i databasen fra før.
             {
                 bestilling.Referanse = Guid.NewGuid().ToString().ToUpper().Substring(0, 6);
-            } while (db.Bestillinger.Where(best => best.Referanse == bestilling.Referanse).Any()); 
+            } while (db.Bestillinger.Where(best => best.Referanse == bestilling.Referanse).Any());
 
 
             //Vi må finne de orginale flygningene i databasen for å unngå exception om "Violation of PRIMARY KEY constraint"
-            foreach (var flygning in gjeldende.Flygninger)
+            foreach (var flygning in gjeldende.Tur.Flygninger)
             {
                 var dbFlygning = db.Flygninger.Find(flygning.ID);
-                if (dbFlygning == null) return View(); //Det skjedde en feil
+                if (dbFlygning == null) throw new InvalidOperationException("Ugyldig flygning"); //Det skjedde en feil
 
-                bestilling.Flygninger.Add(dbFlygning);
+                bestilling.FlygningerTur.Add(dbFlygning);
+            }
+
+            if (gjeldende.Retur != null)
+            {
+                bestilling.FlygningerRetur = new List<Flygning>();
+                foreach (var flygning in gjeldende.Retur.Flygninger)
+                {
+                    var dbFlygning = db.Flygninger.Find(flygning.ID);
+                    if (dbFlygning == null) throw new InvalidOperationException("Ugyldig flygning");
+
+                    bestilling.FlygningerRetur.Add(dbFlygning);
+                }
             }
 
             db.Bestillinger.Add(bestilling);
 
             db.SaveChanges();
 
-
             TempData["bestilling"] = bestilling;
-
             return RedirectToAction("Kvittering");
         }
 
@@ -176,7 +227,7 @@ namespace Flybilletter.Controllers
         {
             Bestilling bestilling = null;
 
-            referanse = referanse.ToUpper();
+            referanse = referanse.ToUpper().Trim();
             var regex = new Regex("^[A-Z0-9]{6}$");
             bool isMatch = regex.IsMatch(referanse);
 
@@ -184,8 +235,30 @@ namespace Flybilletter.Controllers
             {
                 bestilling = db.Bestillinger.Where(best => best.Referanse == referanse).First();
             }
-            
+
             return View("BestillingInformasjon", bestilling);
+        }
+
+        [HttpGet]
+        public string ReferanseEksisterer(string referanse)
+        {
+            string returString = "{{ \"exists\":\"{0}\", \"url\":\"{1}\" }}";
+            if (referanse == null) return string.Format(returString, false, null);
+
+            referanse = referanse.ToUpper().Trim();
+            var regex = new Regex("^[A-Z0-9]{6}$");
+            bool isMatch = regex.IsMatch(referanse);
+            bool exists = false;
+            string url = "";
+
+            if (isMatch)
+            {
+                exists = db.Bestillinger.Where(best => best.Referanse == referanse).Any();
+                if (exists) url = "/Home/ReferanseSok?referanse=" + referanse;
+            }
+
+
+            return string.Format(returString, exists, url);
         }
 
 
@@ -196,6 +269,22 @@ namespace Flybilletter.Controllers
             //TODO: Hvis bestilling er null, altså at referansen ikke finnes i databasen.
 
             return View(bestilling);
+        }
+
+        [HttpGet]
+        public ActionResult Avbestill(string referanse)
+        {
+            try
+            {
+                var bestilling = db.Bestillinger.First(best => best.Referanse.Equals(referanse));
+                db.Bestillinger.Remove(bestilling);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                //TODO: Håndter error.
+            }
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
