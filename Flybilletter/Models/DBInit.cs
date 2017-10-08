@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Flybilletter.Models
 {
-    public class DBInit : DropCreateDatabaseIfModelChanges<DB>
+    public class DBInit : DropCreateDatabaseAlways<DB>
     {
         protected override void Seed(DB context)
         {
@@ -34,6 +34,31 @@ namespace Flybilletter.Models
                 Navn = "Malpensa lufthavn"
 
             };
+            var LHR = new Flyplass()
+            {
+                ID = "LHR",
+                By = "London",
+                Land = "England",
+                Navn = "Heathrow lufthavn"
+
+            };
+            var ARN = new Flyplass()
+            {
+                ID = "ARN",
+                By = "Stockholm",
+                Land = "Sverige",
+                Navn = "Arlanda Lufthavn"
+
+            };
+            var CPH = new Flyplass()
+            {
+                ID = "CPH",
+                By = "København",
+                Land = "Danmark",
+                Navn = "Københavns lufthavn"
+
+            };
+
 
             var BOOOSL = new Rute()
             {
@@ -59,7 +84,43 @@ namespace Flybilletter.Models
                 Til = OSL,
                 BasePris = 1499
             };
-
+            var OSLLHR = new Rute()
+            {
+                Fra = OSL,
+                Til = LHR,
+                BasePris = 1299
+            };
+            var LHROSL = new Rute()
+            {
+                Fra = LHR,
+                Til = OSL,
+                BasePris = 1299
+            };
+            var ARNOSL = new Rute()
+            {
+                Fra = ARN,
+                Til = OSL,
+                BasePris = 799
+            };
+            var OSLARN = new Rute()
+            {
+                Fra = OSL,
+                Til = ARN,
+                BasePris = 799
+            };
+            var CPHOSL = new Rute()
+            {
+                Fra = CPH,
+                Til = OSL,
+                BasePris = 899
+            };
+            var OSLCPH = new Rute()
+            {
+                Fra = OSL,
+                Til = CPH,
+                BasePris = 899
+            };
+            
             var Boeing737_1 = new Fly()
             {
                 Modell = "Boeing 737",
@@ -87,7 +148,7 @@ namespace Flybilletter.Models
             };
 
 
-            for (int i = 0; i < 336; i += 4) // 336 timer = 2 uker
+            for (int i = 0; i < 1344; i += 8) // 336 timer = 2 uker
             {
                 var flygningBOOOSL = new Flygning()
                 {
@@ -120,20 +181,79 @@ namespace Flybilletter.Models
                     Fly = flygningMXPOSL.Fly,
                     Rute = OSLMXP
                 };
+                var flygningOSLLHR = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i + 2),
+                    AnkomstTid = DateTime.Today.AddHours(i + 4),
+                    Fly = AirbusA380_2,
+                    Rute = OSLLHR
+                };
+                var flygningLHROSL = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i + 6),
+                    AnkomstTid = DateTime.Today.AddHours(i + 8),
+                    Fly = flygningOSLLHR.Fly,
+                    Rute = LHROSL
+                };
+                var flygningARNOSL = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i),
+                    AnkomstTid = DateTime.Today.AddHours(i + 1),
+                    Fly = Boeing737_1,
+                    Rute = ARNOSL
+                };
+                var flygningOSLARN = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i + 2),
+                    AnkomstTid = DateTime.Today.AddHours(i + 3),
+                    Fly = flygningARNOSL.Fly,
+                    Rute = OSLARN
+                };
+                var flygningOSLCPH = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i),
+                    AnkomstTid = DateTime.Today.AddHours(i + 1),
+                    Fly = Boeing737_3,
+                    Rute = OSLCPH
+                };
+                var flygningCPHOSL = new Flygning()
+                {
+                    AvgangsTid = DateTime.Today.AddHours(i + 3),
+                    AnkomstTid = DateTime.Today.AddHours(i + 4),
+                    Fly = flygningOSLCPH.Fly,
+                    Rute = CPHOSL
+                };
+
 
                 context.Flygninger.Add(flygningBOOOSL);
                 context.Flygninger.Add(flygningOSLBOO);
                 context.Flygninger.Add(flygningMXPOSL);
-                context.Flygninger.Add(flygningOSLMXP);
+                context.Flygninger.Add(flygningARNOSL);
+                context.Flygninger.Add(flygningOSLARN);
+                context.Flygninger.Add(flygningLHROSL);
+                context.Flygninger.Add(flygningOSLLHR);
+                context.Flygninger.Add(flygningOSLCPH);
+                context.Flygninger.Add(flygningCPHOSL);
             }
 
             context.Flyplasser.Add(OSL);
             context.Flyplasser.Add(BOO);
             context.Flyplasser.Add(MXP);
+            context.Flyplasser.Add(LHR);
+            context.Flyplasser.Add(ARN);
+            context.Flyplasser.Add(CPH);
+
             context.Ruter.Add(BOOOSL);
             context.Ruter.Add(OSLBOO);
             context.Ruter.Add(OSLMXP);
             context.Ruter.Add(MXPOSL);
+            context.Ruter.Add(CPHOSL);
+            context.Ruter.Add(OSLCPH);
+            context.Ruter.Add(ARNOSL);
+            context.Ruter.Add(OSLARN);
+            context.Ruter.Add(LHROSL);
+            context.Ruter.Add(OSLLHR);
+
             context.Fly.Add(Boeing737_1);
             context.Fly.Add(Boeing737_2);
             context.Fly.Add(Boeing737_3);
