@@ -9,6 +9,9 @@
 <script>
     $(function () {
         $('#valgtReise').change(function () {
+            $("tr.flygning").removeClass("info");
+            $("tr.flygning input:checked").parents("tr").addClass("info");
+
             var isTurChecked = $('input[name=turindeks]:checked', '#valgtReise').val() != null; // Hvis ikke valgt verdi = null
             var isReturChecked = true;
             if ($('input[name=returindeks]', '#valgtReise').length > 0) { // Hvis det finnes returreiser
@@ -23,6 +26,7 @@
 
         $("tr.flygning").click(function (event) {
             $(this).find("input").prop('checked', true);
+
             $('#valgtReise').change();
         });
     });
@@ -54,7 +58,7 @@
                     @if (reise.Mellomlanding > 0)
                     {
                         <td>
-                            @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-tur-@i" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                            @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-tur-@i" data-toggle="collapse" class="btn btn-info btn-xs">Vis mer</a>
                             <div id="mellom-tur-@i" class="collapse">
                                 @Html.Partial("_Mellomlandinger", reise)
                             </div>
@@ -105,7 +109,7 @@
                         @if (reise.Mellomlanding > 0)
                         {
                             <td>
-                                @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-retur-@i" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                                @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-retur-@i" data-toggle="collapse" class="btn btn-info btn-xs">Vis mer</a>
                                 <div id="mellom-retur-@i" class="collapse">
                                     @Html.Partial("_Mellomlandinger", reise)
                                 </div>
