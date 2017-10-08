@@ -228,6 +228,7 @@ namespace Flybilletter.Models
                 context.Flygninger.Add(flygningBOOOSL);
                 context.Flygninger.Add(flygningOSLBOO);
                 context.Flygninger.Add(flygningMXPOSL);
+                context.Flygninger.Add(flygningOSLMXP);
                 context.Flygninger.Add(flygningARNOSL);
                 context.Flygninger.Add(flygningOSLARN);
                 context.Flygninger.Add(flygningLHROSL);
