@@ -1,4 +1,10 @@
-﻿@model List<List<Flybilletter.Models.Reise>>
+﻿@model Flybilletter.Models.FlygningerViewModel
+
+@if (Model == null)
+{
+    <h3>Feil. Uglydig søk-parametre</h3>
+    return;
+}
 
 <script>
     $(function () {
@@ -22,78 +28,97 @@
     });
 </script>
 
-@if (Model == null)
-{
-    <h3>Feil. Uglydig søk-parametre</h3>
-}
-else
-{
 
-    <h3>Flygninger:</h3>
-    using (Html.BeginForm("ValgtReise", "Home", FormMethod.Post, new { id="valgtReise"}))
+<h3>Flygninger:</h3>
+@using (Html.BeginForm("ValgtReise", "Home", FormMethod.Post, new { id = "valgtReise" }))
     {
-
-        for (var i = 0; i < Model.Count; i++)  //Maks 2 elementer. Indeks 0 for Tur, indeks 1 for retur
+    <h4>Tur</h4>
+    <table class="table table-striped col-md-12 col-sm-12">
+        <thead>
+            <tr>
+                <th>Rute</th>
+                <th>Avgang</th>
+                <th>Ankomst</th>
+                <th>Reisetid</th>
+                <th>Pris</th>
+                <th></th>
+            </tr>
+        </thead>
+        @for(var i = 0; i < Model.TurMuligheter.Count; i++)
         {
-            var ReiseListe = Model[i];
-            string name = i == 0 ? "Tur" : "Retur";
-            string radioButtonName = i == 0 ? "turindeks" : "returindeks";
+            var reise = Model.TurMuligheter[i];
+            <tr class="flygning">
+            @if (reise.Mellomlanding > 0) { 
+                <td>
+                    @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-tur-@i" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                    <div id="mellom-tur-@i" class="collapse">
+                        @Html.Partial("_Mellomlandinger", reise)
+                    </div>
+                </td>
+            }
+            else
+            {
+                <td>
+                    @reise.Fra.Navn -@reise.Til.Navn
+                </td>
+            }
 
-            <h4>@name</h4>
-            <table class="table table-striped col-md-12 col-sm-12">
-                <thead>
+                <td>@reise.Avgang</td>
+                <td>@reise.Ankomst</td>
+                <td>@(reise.Ankomst - reise.Avgang)</td>
+                <td>@reise.Pris</td>
+                <td><input name="turindeks" type="radio" value="@i" /></td>
+            </tr>
+        }
+    </table>
+
+    if (Model.TurRetur)
+    {
+        
+        <h4>Retur</h4>
+        <table class="table table-striped col-md-12 col-sm-12">
+            <thead>
+                <tr>
                     <th>Rute</th>
                     <th>Avgang</th>
                     <th>Ankomst</th>
                     <th>Reisetid</th>
                     <th>Pris</th>
                     <th></th>
-                </thead>
-                @for(var j = 0; j < ReiseListe.Count; j++)
-                {
-                    var reise = ReiseListe[j];
-                    <tr class="flygning">
-                        @{if (reise.Mellomlanding > 0)
-                            {
-                                <td>@reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-@i-@j" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
-                                    <div id="mellom-@i-@j" class="collapse">
-                                        <table class="table col-md-1 col-sm-2">
-                                            <thead>
-                                                <th>Rute</th>
-                                                <th>Avgang</th>
-                                                <th>Ankomst</th>
-                                                <th>Reisetid</th>
-                                                <th>Pris</th>
-                                            </thead>
-                                            @foreach (var flygning in reise.Flygninger)
-                                            {
-                                                <tr>
-                                                    <td>@flygning.Rute.Fra.Navn - @flygning.Rute.Til.Navn</td>
-                                                    <td>@flygning.AvgangsTid</td>
-                                                    <td>@flygning.AnkomstTid</td>
-                                                    <td>@(flygning.AnkomstTid - flygning.AvgangsTid)</td>
-                                                    <td>@flygning.Rute.BasePris</td>
-                                                </tr>
-                                            }
-                                        </table>
-                                    </div>
-                                </td>
-                            }
-                            else
-                            {
-                                <td>@reise.Fra.Navn - @reise.Til.Navn</td>
-                            }
-                        }
+                </tr>
+            </thead>
+            @for (var i = 0; i < Model.TurMuligheter.Count; i++)
+            {
+                var reise = Model.ReturMuligheter[i];
+                <tr class="flygning">
+                    @if (reise.Mellomlanding > 0)
+                    {
+                        <td>
+                            @reise.Fra.Navn - @reise.Til.Navn <a href="#mellom-retur-@i" data-toggle="collapse" class="btn btn-info btn-xs">(+@reise.Mellomlanding)</a>
+                            <div id="mellom-retur-@i" class="collapse">
+                               @Html.Partial("_Mellomlandinger", reise)
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @reise.Fra.Navn -@reise.Til.Navn
+                        </td>
+                    }
 
-                        <td>@reise.Avgang</td>
-                        <td>@reise.Ankomst</td>
-                        <td>@(reise.Ankomst - reise.Avgang)</td>
-                        <td>@reise.Pris</td>
-                        <td><input name="@radioButtonName" type="radio" value="@j" /></td>
-                    </tr>
-                       }
-            </table>
-        }
-        <button id="submitFlygninger" class="btn" type="submit" disabled="disabled">Velg flygninger</button>
+                    <td>@reise.Avgang</td>
+                    <td>@reise.Ankomst</td>
+                    <td>@(reise.Ankomst - reise.Avgang)</td>
+                    <td>@reise.Pris</td>
+                    <td><input name="returindeks" type="radio" value="@i" /></td>
+                </tr>
+            }
+        </table>
     }
+
+
+
+
+    <button id="submitFlygninger" class="btn" type="submit" disabled="disabled">Velg flygninger</button>
 }
