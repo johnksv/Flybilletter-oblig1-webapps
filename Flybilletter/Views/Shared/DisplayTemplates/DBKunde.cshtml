@@ -1,4 +1,4 @@
-﻿@model Flybilletter.Models.Kunde
+﻿@model Flybilletter.Models.DBKunde
 
 <dl class="dl-horizontal">
 
@@ -31,6 +31,14 @@
     </dd>
 
     <dt>
+        Poststed
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Poststed.Postnr)
+        @Html.DisplayFor(model => model.Poststed.Poststed)
+    </dd>
+
+    <dt>
         Telefonnummer
     </dt>
 
@@ -38,4 +46,12 @@
         @Html.DisplayFor(model => model.Tlf)
 
     </dd>
+
+    <dt>
+        E-post
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.EPost)
+    </dd>
+
 </dl>

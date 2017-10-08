@@ -127,13 +127,14 @@ namespace Flybilletter.Controllers
 
             var turListe = (List<Reise>)Session["turListe"];
             var returListe = (List<Reise>)Session["returListe"];
+            if (turListe == null || returListe == null) return RedirectToAction("Index");
 
             int turIndeksInt = int.Parse(turIndeks);
             int returIndeksInt = -1;
             if (returIndeks != null) returIndeksInt = int.Parse(returIndeks);
 
-            if (turIndeksInt < 0 || turIndeksInt >= turListe.Count) RedirectToAction("Index");
-            if (returIndeksInt < -1 || returIndeksInt >= returListe.Count) RedirectToAction("Index");
+            if (turIndeksInt < 0 || turIndeksInt >= turListe.Count) return RedirectToAction("Index");
+            if (returIndeksInt < -1 || returIndeksInt >= returListe.Count) return RedirectToAction("Index");
 
 
             int antallBilletter = (int)Session["antallbilletter"];
@@ -173,6 +174,7 @@ namespace Flybilletter.Controllers
         {
             //TODO: Generer referanse, lagre i database
             var kunder = (List<Kunde>)Session["KunderBestilling"];
+            var dbKunder = DBKunde.LeggInn(kunder);
 
             //Denne inneholder informasjon om Tur- og Retur-property
             var gjeldende = (BestillingViewModel)Session["GjeldendeBestilling"];
@@ -181,7 +183,7 @@ namespace Flybilletter.Controllers
             {
                 BestillingsTidspunkt = DateTime.Now,
                 FlygningerTur = new List<Flygning>(),
-                Passasjerer = kunder
+                Passasjerer = dbKunder
             };
 
 
@@ -212,7 +214,10 @@ namespace Flybilletter.Controllers
                     bestilling.FlygningerRetur.Add(dbFlygning);
                 }
             }
-
+            foreach(var kunde in dbKunder)
+            {
+                db.Kunder.Attach(kunde);
+            }
             db.Bestillinger.Add(bestilling);
 
             db.SaveChanges();
@@ -238,7 +243,7 @@ namespace Flybilletter.Controllers
 
             if (isMatch)
             {
-                bestilling = db.Bestillinger.Where(best => best.Referanse == referanse).First();
+                bestilling = db.Bestillinger.Include("Passasjerer.Poststed").Where(best => best.Referanse == referanse).First();
             }
 
             return View("BestillingInformasjon", bestilling);
@@ -264,6 +269,20 @@ namespace Flybilletter.Controllers
 
 
             return string.Format(returString, exists, url);
+        }
+
+        [HttpGet]
+        public string HentPoststed(string postnummer)
+        {
+            var regex = new Regex("^[0-9]{4}$");
+            bool isMatch = regex.IsMatch(postnummer);
+            DBPoststed poststed = null;
+            if (isMatch)
+            {
+                poststed = db.Poststeder.FirstOrDefault(model => model.Postnr == postnummer);
+            }
+            
+            return poststed == null ? "null" : poststed.Poststed;
         }
 
 
