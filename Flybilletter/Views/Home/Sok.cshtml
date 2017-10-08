@@ -53,6 +53,7 @@
         $("input[name='turretur']").change(function () { radioButtonChange() });
 
 
+
         $("#sokForm").change(function (event) {
             event.preventDefault();
 
@@ -69,8 +70,9 @@
         });
 
         $("#sokForm").change();
-
-
+        $("#turdato").change(function () {
+            $("#returdato").val($("#turdato").val());
+        });
     });
 </script>
 <h2>Bestill flybilletter</h2>
@@ -114,7 +116,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Avreise, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Avreise, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                @Html.EditorFor(model => model.Avreise, new { htmlAttributes = new { @class = "form-control", @type = "date", @id = "turdato" } })
                 @Html.ValidationMessageFor(model => model.Avreise, "", new { @class = "text-danger" })
             </div>
         </div>
