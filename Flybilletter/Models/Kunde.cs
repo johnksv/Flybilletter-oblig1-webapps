@@ -37,8 +37,14 @@ namespace Flybilletter.Models
         public string Tlf { get; set; }
 
         [Required]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email")]
+        [RegularExpression(@"^[A-Za-zæøåÆØÅ0-9_\-,\. ]+@[a-zA-Z0-9]+\.[a-zA-Z]+$", ErrorMessage = "Ugyldig e-post")]
+        public string EPost { get; set; }
+
+        [Required]
         [RegularExpression("^[0-9]{4}$", ErrorMessage = "Postnummer må være 4 siffer")]
-        public int Postnummer { get; set; }
+        public string Postnummer { get; set; }
 
         public string Poststed { get; set; }
 

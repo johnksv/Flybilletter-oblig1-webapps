@@ -10,7 +10,7 @@ namespace Flybilletter.Models
     public class DBPoststed
     {
         [Key]
-        public int Postnr { get; set; }
+        public string Postnr { get; set; }
         public string Poststed { get; set; }
 
         public virtual List<DBKunde> Kunder { get; set; }
@@ -30,6 +30,8 @@ namespace Flybilletter.Models
 
         public string Tlf { get; set; }
 
+        public string EPost { get; set; }
+
         public DBPoststed Poststed { get; set; }
 
 
@@ -45,23 +47,27 @@ namespace Flybilletter.Models
                     Fornavn = kunde.Fornavn,
                     Etternavn = kunde.Etternavn,
                     Adresse = kunde.Adresse,
-                    Poststed = kunde.Poststed.Poststed
+                    Postnummer = kunde.Poststed.Postnr,
+                    Poststed = kunde.Poststed.Poststed,
+                    Tlf = kunde.Tlf,
+                    EPost = kunde.EPost,
+                    Fodselsdag = kunde.Fodselsdag
                 }).ToList();
             }
             return kunder;
         }
 
-        public static List<DBKunde> leggInn(IEnumerable<Kunde> kunder)
+        public static List<DBKunde> LeggInn(IEnumerable<Kunde> kunder)
         {
             var dbKunder = new List<DBKunde>(kunder.Count());
             foreach (var kunde in kunder)
             {
-                dbKunder.Add(leggInn(kunde));
+                dbKunder.Add(LeggInn(kunde));
             }
             return dbKunder;
         }
 
-            public static DBKunde leggInn(Kunde innKunde)
+            public static DBKunde LeggInn(Kunde innKunde)
         {
             using (var db = new DB())
             {
@@ -70,41 +76,24 @@ namespace Flybilletter.Models
                     Fornavn = innKunde.Fornavn,
                     Etternavn = innKunde.Etternavn,
                     Adresse = innKunde.Adresse,
+                    Fodselsdag = innKunde.Fodselsdag,
+                    EPost = innKunde.EPost,
+                    Tlf = innKunde.Tlf
                 };
 
                 var poststed = db.Poststeder.Find(innKunde.Postnummer);
 
+
+                db.Poststeder.Attach(poststed);
                 nyKunde.Poststed = poststed;
+                
                 db.Kunder.Add(nyKunde);
                 db.SaveChanges();
                 return nyKunde;
             }
         }
-        public static void endreKunde(Kunde innKunde)
-        {
-            using (var db = new DB())
-            {
-                DBKunde dbKunde = db.Kunder.Find(innKunde.ID);
-                dbKunde.Fornavn = innKunde.Fornavn;
-                dbKunde.Etternavn = innKunde.Etternavn;
-                dbKunde.Adresse = innKunde.Adresse;
-
-                var poststed = db.Poststeder.Find(innKunde.Postnummer);
-                dbKunde.Poststed = poststed;
-                db.SaveChanges();
-
-            }
-        }
-        public static void slettKunde(Kunde innKunde)
-        {
-            using (var db = new DB())
-            {
-                DBKunde slettKunde = db.Kunder.Find(innKunde.ID);
-                db.Kunder.Remove(slettKunde);
-                db.SaveChanges();
-            }
-        }
-        public Kunde hentKundePaaID(int kundeID)
+  
+        public Kunde HentKundePaaID(int kundeID)
         {
             using (var db = new DB())
             {

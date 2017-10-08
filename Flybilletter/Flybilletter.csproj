@@ -162,7 +162,7 @@
     <Content Include="Views\Home\BestillingDetaljer.cshtml" />
     <Content Include="Views\Home\Sok.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Kunde.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\Kunde.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DBKunde.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Flygning.cshtml" />
     <Content Include="Views\Home\Kvittering.cshtml" />
     <Content Include="Views\Home\_Flygninger.cshtml" />
