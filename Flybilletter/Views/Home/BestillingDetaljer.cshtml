@@ -199,7 +199,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <p>BETALINGSINFORMASJON</p>
+                        <h4>Prisoversikt</h4>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -211,7 +211,10 @@
                                 @{
                                     double totalPris = 0;
                                     var flygninger = Model.Tur.Flygninger;
-                                    flygninger.AddRange(Model.Retur.Flygninger);
+                                    if (Model.Retur != null)
+                                    {
+                                        flygninger.AddRange(Model.Retur.Flygninger);
+                                    }
                                     foreach (var flygning in flygninger)
                                     {
                                         <tr>
