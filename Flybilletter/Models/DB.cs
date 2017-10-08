@@ -25,7 +25,8 @@ namespace Flybilletter.Models
         public virtual DbSet<Fly> Fly { get; set; }
         public virtual DbSet<Flygning> Flygninger { get; set; }
         public virtual DbSet<Flyplass> Flyplasser { get; set; }
-        public virtual DbSet<Kunde> Kunder { get; set; }
+        public virtual DbSet<DBKunde> Kunder { get; set; }
+        public virtual DbSet<DBPoststed> Poststeder { get; set; }
         public virtual DbSet<Rute> Ruter { get; set; }
     }
 }

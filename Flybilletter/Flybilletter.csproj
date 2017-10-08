@@ -138,6 +138,7 @@
     </Compile>
     <Compile Include="Models\BestillingViewModel.cs" />
     <Compile Include="Models\FlygningerViewModel.cs" />
+    <Compile Include="Models\DBKunde.cs" />
     <Compile Include="Models\KredittkortViewModel.cs" />
     <Compile Include="Models\Reise.cs" />
     <Compile Include="Models\SokViewModel.cs" />
@@ -162,7 +163,7 @@
     <Content Include="Views\Home\BestillingDetaljer.cshtml" />
     <Content Include="Views\Home\Sok.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Kunde.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\Kunde.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DBKunde.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Flygning.cshtml" />
     <Content Include="Views\Home\Kvittering.cshtml" />
     <Content Include="Views\Home\_ReferanseSok.cshtml" />
